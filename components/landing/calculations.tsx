@@ -1,16 +1,9 @@
 'use client'
 
-import { ArrowRightIcon } from '@radix-ui/react-icons'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { BorderBeam } from '@/components/ui/border-beam'
-import TextShimmer from '@/components/ui/text-shimmer'
 import { AgeCalculator } from '@/components/landing/AgeCalculator';
 import { TempCalculator } from '@/components/landing/TempCalculator';
 
 export default function HeroSection() {
-   const ref = useRef(null)
-   const inView = useInView(ref, { once: true, margin: '-100px' })
    return (
 <section
   className="pt-6 pb-2 relative mx-auto mt-20 max-w-5xl px-6 text-center md:px-8"

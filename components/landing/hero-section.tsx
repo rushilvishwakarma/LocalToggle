@@ -1,16 +1,11 @@
 'use client'
 
 import Dropzone from '@/components/ui/dropzone';
-import { ArrowRightIcon } from '@radix-ui/react-icons'
-import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { BorderBeam } from '@/components/ui/border-beam'
-import TextShimmer from '@/components/ui/text-shimmer'
-import { Button } from '@/components/ui/button'
+
 
 export default function HeroSection() {
    const ref = useRef(null)
-   const inView = useInView(ref, { once: true, margin: '-100px' })
    return (
       <section
          id="hero"

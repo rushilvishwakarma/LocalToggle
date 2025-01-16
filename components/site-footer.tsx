@@ -1,5 +1,6 @@
 import { DiscordLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const footerNavs = [
    {
@@ -73,8 +74,9 @@ export function SiteFooter() {
             <div className="gap-4 p-4 px-8 py-16 sm:pb-16 md:flex md:justify-between">
                <div className="mb-12 flex flex-col gap-4">
                   <Link href="/" className="flex items-center gap-2">
-                     <img
-                        src="https://nyxbui.design/icon.png"
+                     <Image
+                        src="/path/to/image"
+                        alt="Nyxcn UI Logo"
                         className="text-primary size-8"
                      />
                      <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">

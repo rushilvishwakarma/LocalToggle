@@ -3,7 +3,6 @@
 // imports
 import { FiUpload } from "react-icons/fi";
 import { TbDragDrop2 } from "react-icons/tb";
-import { MdClose } from "react-icons/md";
 import ReactDropzone from "react-dropzone";
 import bytesToSize from "@/utils/bytes-to-size";
 import fileToIcon from "@/utils/file-to-icon";
@@ -15,7 +14,6 @@ import convertFile from "@/utils/convert";
 import { ImSpinner3 } from "react-icons/im";
 import { MdDone } from "react-icons/md";
 import { Badge } from "@/components/ui/badge";
-import { HiOutlineDownload } from "react-icons/hi";
 import { BiError } from "react-icons/bi";
 import { BorderBeam } from '@/components/ui/border-beam'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -124,7 +122,7 @@ export default function Dropzone() {
   };
 
   const downloadAll = (): void => {
-    for (let action of actions) {
+    for (const action of actions) {
       !action.is_error && download(action);
     }
   };
@@ -151,7 +149,7 @@ export default function Dropzone() {
     setActions(tmp_actions);
     setIsConverting(true);
     let allConverted = true;
-    for (let action of tmp_actions) {
+    for (const action of tmp_actions) {
       try {
         const { url, output } = await convertFile(ffmpegRef.current, action);
         tmp_actions = tmp_actions.map((elt) =>

@@ -24,9 +24,7 @@ import {
   MorphingDialogTrigger,
   MorphingDialogContent,
   MorphingDialogTitle,
-  MorphingDialogSubtitle,
   MorphingDialogClose,
-  MorphingDialogDescription,
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon } from 'lucide-react';

@@ -9,7 +9,6 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type LinkPreviewProps = {

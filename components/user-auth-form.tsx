@@ -24,9 +24,10 @@ export const userAuthSchema = z.object({
 })
 type FormData = z.infer<typeof userAuthSchema>
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+// Remove the empty interface UserAuthFormProps
+// interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
    const form = useForm<FormData>({
       resolver: zodResolver(userAuthSchema),
       defaultValues: {
