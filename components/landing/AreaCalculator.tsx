@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Thermometer } from "lucide-react";
+import { Scaling } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
@@ -16,66 +16,111 @@ import {
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 
 const units = [
-  { name: "Celsius", symbol: "°C" },
-  { name: "Fahrenheit", symbol: "°F" },
-  { name: "Kelvin", symbol: "K" },
-  { name: "Rankine", symbol: "°R" },
-  { name: "Reaumur", symbol: "°Re" }
+  { name: "Square Kilometers", symbol: "km²" },
+  { name: "Hectares", symbol: "ha" },
+  { name: "Ares", symbol: "a" },
+  { name: "Square Meters", symbol: "m²" },
+  { name: "Square Decimeters", symbol: "dm²" },
+  { name: "Square Centimeters", symbol: "cm²" },
+  { name: "Square Millimeters", symbol: "mm²" },
+  { name: "Square Microns", symbol: "µm²" },
+  { name: "Acres", symbol: "ac" },
+  { name: "Square Miles", symbol: "mi²" },
+  { name: "Square Yards", symbol: "yd²" },
+  { name: "Square Feet", symbol: "ft²" },
+  { name: "Square Inches", symbol: "in²" },
+  { name: "Square Rods", symbol: "rd²" },
+  { name: "Qing", symbol: "qing" },
+  { name: "Mu", symbol: "mu" },
+  { name: "Square Chi", symbol: "chi²" },
+  { name: "Square Cun", symbol: "cun²" },
+  { name: "Square Gongli", symbol: "gongli²" }
 ];
 
-function convertTemperature(value: number, fromUnit: string, toUnit: string): number {
+function convertArea(value: number, fromUnit: string, toUnit: string): number {
   if (fromUnit === toUnit) return value;
 
-  let celsiusValue: number;
+  // Convert to square meters first (base unit)
+  let squareMeters: number;
 
-  // Convert from any unit to Celsius
+  // Convert from any unit to square meters
   switch (fromUnit) {
-    case "Celsius":
-      celsiusValue = value;
+    case "Square Kilometers": squareMeters = value * 1000000;
       break;
-    case "Fahrenheit":
-      celsiusValue = (value - 32) * 5 / 9;
+    case "Hectares": squareMeters = value * 10000;
       break;
-    case "Kelvin":
-      celsiusValue = value - 273.15;
+    case "Ares": squareMeters = value * 100;
       break;
-    case "Rankine":
-      celsiusValue = (value - 491.67) * 5 / 9;
+    case "Square Meters": squareMeters = value;
       break;
-    case "Reaumur":
-      celsiusValue = value * 5 / 4;
+    case "Square Decimeters": squareMeters = value * 0.01;
       break;
-    default:
-      throw new Error("Unsupported unit");
+    case "Square Centimeters": squareMeters = value * 0.0001;
+      break;
+    case "Square Millimeters": squareMeters = value * 0.000001;
+      break;
+    case "Square Microns": squareMeters = value * 1e-12;
+      break;
+    case "Acres": squareMeters = value * 4046.86;
+      break;
+    case "Square Miles": squareMeters = value * 2589988.11;
+      break;
+    case "Square Yards": squareMeters = value * 0.836127;
+      break;
+    case "Square Feet": squareMeters = value * 0.092903;
+      break;
+    case "Square Inches": squareMeters = value * 0.00064516;
+      break;
+    case "Square Rods": squareMeters = value * 25.2929;
+      break;
+    case "Qing": squareMeters = value * 66666.67;
+      break;
+    case "Mu": squareMeters = value * 666.67;
+      break;
+    case "Square Chi": squareMeters = value * 0.1111;
+      break;
+    case "Square Cun": squareMeters = value * 0.001111;
+      break;
+    case "Square Gongli": squareMeters = value * 1000000;
+      break;
+    default: throw new Error("Unsupported unit");
   }
 
-  // Convert from Celsius to the target unit
+  // Convert from square meters to target unit
   switch (toUnit) {
-    case "Celsius":
-      return celsiusValue;
-    case "Fahrenheit":
-      return celsiusValue * 9 / 5 + 32;
-    case "Kelvin":
-      return celsiusValue + 273.15;
-    case "Rankine":
-      return celsiusValue * 9 / 5 + 491.67;
-    case "Reaumur":
-      return celsiusValue * 4 / 5;
-    default:
-      throw new Error("Unsupported unit");
+    case "Square Kilometers": return squareMeters / 1000000;
+    case "Hectares": return squareMeters / 10000;
+    case "Ares": return squareMeters / 100;
+    case "Square Meters": return squareMeters;
+    case "Square Decimeters": return squareMeters * 100;
+    case "Square Centimeters": return squareMeters * 10000;
+    case "Square Millimeters": return squareMeters * 1000000;
+    case "Square Microns": return squareMeters * 1e12;
+    case "Acres": return squareMeters / 4046.86;
+    case "Square Miles": return squareMeters / 2589988.11;
+    case "Square Yards": return squareMeters / 0.836127;
+    case "Square Feet": return squareMeters / 0.092903;
+    case "Square Inches": return squareMeters / 0.00064516;
+    case "Square Rods": return squareMeters / 25.2929;
+    case "Qing": return squareMeters / 66666.67;
+    case "Mu": return squareMeters / 666.67;
+    case "Square Chi": return squareMeters / 0.1111;
+    case "Square Cun": return squareMeters / 0.001111;
+    case "Square Gongli": return squareMeters / 1000000;
+    default: throw new Error("Unsupported unit");
   }
 }
 
-export function TempCalculator() {
+export function AreaCalculator() {
   const [inputValue, setInputValue] = useState<string>("0");
-  const [fromUnit, setFromUnit] = useState<string>("Celsius");
-  const [toUnit, setToUnit] = useState<string>("Fahrenheit");
+  const [fromUnit, setFromUnit] = useState<string>("Square Meters");
+  const [toUnit, setToUnit] = useState<string>("Square Feet");
   const [convertedValue, setConvertedValue] = useState<number>(0);
 
   useEffect(() => {
     const numericValue = parseFloat(inputValue);
     if (!isNaN(numericValue)) {
-      const result = convertTemperature(numericValue, fromUnit, toUnit);
+      const result = convertArea(numericValue, fromUnit, toUnit);
       setConvertedValue(result);
     } else {
       setConvertedValue(0);
@@ -117,14 +162,14 @@ export function TempCalculator() {
           <div className="flex flex-col gap-1 text-left">
             {/* Title */}
             <div className="flex items-center justify-center bg-white bg-opacity-[0.05] w-16 h-16 rounded-full">
-              <Thermometer className="text-gray-400 w-7 h-7 strokeWidth={1}" />
+              <Scaling className="text-gray-400 w-7 h-7 strokeWidth={1}" />
             </div>
           </div>
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-                <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
-            Temperature Converter
+             <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+            Area Converter
           </MorphingDialogTitle>
           <button
             type="button"
@@ -145,7 +190,7 @@ export function TempCalculator() {
           {/* Dialog Content */}
           <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
-              Temperature Converter
+              Area Converter
             </MorphingDialogTitle>
             <div className="mt-4 flex flex-col gap-3 items-center">
 
@@ -164,8 +209,8 @@ export function TempCalculator() {
                         {fromUnit} {getUnitSymbol(fromUnit)}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
+                    <PopoverContent className="w-[600px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-4 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}
@@ -205,8 +250,8 @@ export function TempCalculator() {
                         {toUnit} {getUnitSymbol(toUnit)}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
+                    <PopoverContent className="w-[600px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-4 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}

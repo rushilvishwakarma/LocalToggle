@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Thermometer } from "lucide-react";
+import { Database } from "lucide-react"; // Changed icon
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
@@ -16,66 +16,59 @@ import {
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 
 const units = [
-  { name: "Celsius", symbol: "°C" },
-  { name: "Fahrenheit", symbol: "°F" },
-  { name: "Kelvin", symbol: "K" },
-  { name: "Rankine", symbol: "°R" },
-  { name: "Reaumur", symbol: "°Re" }
+  { name: "Bytes", symbol: "B" },
+  { name: "Kilobytes", symbol: "KB" },
+  { name: "Megabytes", symbol: "MB" },
+  { name: "Gigabytes", symbol: "GB" },
+  { name: "Terabytes", symbol: "TB" },
+  { name: "Petabytes", symbol: "PB" },
 ];
 
-function convertTemperature(value: number, fromUnit: string, toUnit: string): number {
+function convertData(value: number, fromUnit: string, toUnit: string): number {
   if (fromUnit === toUnit) return value;
 
-  let celsiusValue: number;
+  // Convert to bytes first (base unit)
+  let bytes: number;
 
-  // Convert from any unit to Celsius
+  // Convert from any unit to bytes
   switch (fromUnit) {
-    case "Celsius":
-      celsiusValue = value;
+    case "Bytes": bytes = value;
       break;
-    case "Fahrenheit":
-      celsiusValue = (value - 32) * 5 / 9;
+    case "Kilobytes": bytes = value * 1024;
       break;
-    case "Kelvin":
-      celsiusValue = value - 273.15;
+    case "Megabytes": bytes = value * 1024 * 1024;
       break;
-    case "Rankine":
-      celsiusValue = (value - 491.67) * 5 / 9;
+    case "Gigabytes": bytes = value * 1024 * 1024 * 1024;
       break;
-    case "Reaumur":
-      celsiusValue = value * 5 / 4;
+    case "Terabytes": bytes = value * 1024 * 1024 * 1024 * 1024;
       break;
-    default:
-      throw new Error("Unsupported unit");
+    case "Petabytes": bytes = value * 1024 * 1024 * 1024 * 1024 * 1024;
+      break;
+    default: throw new Error("Unsupported unit");
   }
 
-  // Convert from Celsius to the target unit
+  // Convert from bytes to target unit
   switch (toUnit) {
-    case "Celsius":
-      return celsiusValue;
-    case "Fahrenheit":
-      return celsiusValue * 9 / 5 + 32;
-    case "Kelvin":
-      return celsiusValue + 273.15;
-    case "Rankine":
-      return celsiusValue * 9 / 5 + 491.67;
-    case "Reaumur":
-      return celsiusValue * 4 / 5;
-    default:
-      throw new Error("Unsupported unit");
+    case "Bytes": return bytes;
+    case "Kilobytes": return bytes / 1024;
+    case "Megabytes": return bytes / (1024 * 1024);
+    case "Gigabytes": return bytes / (1024 * 1024 * 1024);
+    case "Terabytes": return bytes / (1024 * 1024 * 1024 * 1024);
+    case "Petabytes": return bytes / (1024 * 1024 * 1024 * 1024 * 1024);
+    default: throw new Error("Unsupported unit");
   }
 }
 
-export function TempCalculator() {
+export function DataCalculator() {
   const [inputValue, setInputValue] = useState<string>("0");
-  const [fromUnit, setFromUnit] = useState<string>("Celsius");
-  const [toUnit, setToUnit] = useState<string>("Fahrenheit");
+  const [fromUnit, setFromUnit] = useState<string>("Megabytes");
+  const [toUnit, setToUnit] = useState<string>("Gigabytes");
   const [convertedValue, setConvertedValue] = useState<number>(0);
 
   useEffect(() => {
     const numericValue = parseFloat(inputValue);
     if (!isNaN(numericValue)) {
-      const result = convertTemperature(numericValue, fromUnit, toUnit);
+      const result = convertData(numericValue, fromUnit, toUnit);
       setConvertedValue(result);
     } else {
       setConvertedValue(0);
@@ -117,14 +110,14 @@ export function TempCalculator() {
           <div className="flex flex-col gap-1 text-left">
             {/* Title */}
             <div className="flex items-center justify-center bg-white bg-opacity-[0.05] w-16 h-16 rounded-full">
-              <Thermometer className="text-gray-400 w-7 h-7 strokeWidth={1}" />
+              <Database className="text-gray-400 w-7 h-7 strokeWidth={1}" />
             </div>
           </div>
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-                <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
-            Temperature Converter
+                    <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+            Data Storage Converter
           </MorphingDialogTitle>
           <button
             type="button"
@@ -145,7 +138,7 @@ export function TempCalculator() {
           {/* Dialog Content */}
           <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
-              Temperature Converter
+              Data Storage Converter
             </MorphingDialogTitle>
             <div className="mt-4 flex flex-col gap-3 items-center">
 
@@ -164,8 +157,8 @@ export function TempCalculator() {
                         {fromUnit} {getUnitSymbol(fromUnit)}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
+                    <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-2 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}
@@ -205,8 +198,8 @@ export function TempCalculator() {
                         {toUnit} {getUnitSymbol(toUnit)}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
+                    <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-2 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}

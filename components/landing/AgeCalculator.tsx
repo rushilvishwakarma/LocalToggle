@@ -75,7 +75,7 @@ export function AgeCalculator() {
       </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-        <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400">
+        <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
             Age Calculator
           </MorphingDialogTitle>
           <button

@@ -78,6 +78,8 @@ export function SiteFooter() {
                         src="/path/to/image"
                         alt="Nyxcn UI Logo"
                         className="text-primary size-8"
+                        width={32}
+                        height={32}
                      />
                      <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
                         Nyxcn UI

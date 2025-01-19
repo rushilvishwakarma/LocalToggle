@@ -261,7 +261,7 @@ function MorphingDialogContent({
       aria-modal='true'
       aria-labelledby={`motion-ui-morphing-dialog-title-${uniqueId}`}
       aria-describedby={`motion-ui-morphing-dialog-description-${uniqueId}`}
-      transition={{ type: "spring", duration: 0.4, bounce: 0 }} // Adjusted transition
+      transition={{ type: "spring", duration: 0.7, bounce: 0 }} // Adjusted transition
       initial={isMobile ? { opacity: 0, scale: 0.9 } : undefined}
       animate={isMobile ? { opacity: 1, scale: 1 } : undefined}
       exit={isMobile ? { opacity: 0, scale: 0.9 } : undefined}
@@ -295,11 +295,11 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
         <>
           <motion.div
             key={`backdrop-${uniqueId}`}
-            className='fixed inset-0 h-full w-full bg-black/50' // Dim the background without blur
+            className='fixed inset-0 h-full w-full bg-black/70' // Dim the background without blur
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }} // Reduce transition duration for better performance
+            transition={{ duration: 0.4 }} // Reduce transition duration for better performance
           />
           <motion.div
             className='fixed inset-0 z-50 flex items-center justify-center'
