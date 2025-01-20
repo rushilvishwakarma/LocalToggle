@@ -35,12 +35,31 @@ const heightUnits = [
   { name: "Inches", symbol: "in" },
 ];
 
+// Add this custom hook at the top level
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
+  return isMobile;
+};
+
 export function BMICalculator() {
   const [weightValue, setWeightValue] = useState<string>("");
   const [heightValue, setHeightValue] = useState<string>("");
   const [weightUnit, setWeightUnit] = useState<string>("Kilograms");
   const [heightUnit, setHeightUnit] = useState<string>("Centimeters");
   const [bmi, setBMI] = useState<number>(0);
+  const isMobile = useIsMobile();
 
   const getUnitSymbol = (unitName: string) => {
     const unit = [...weightUnits, ...heightUnits].find(u => u.name === unitName);
@@ -144,6 +163,7 @@ export function BMICalculator() {
                       value={weightValue}
                       onChange={handleWeightChange}
                       className="flex-1"
+                      autoFocus={!isMobile}
                     />
                     <Popover>
                       <PopoverTrigger asChild>
@@ -186,6 +206,7 @@ export function BMICalculator() {
                       value={heightValue}
                       onChange={handleHeightChange}
                       className="flex-1"
+                      autoFocus={!isMobile}
                     />
                     <Popover>
                       <PopoverTrigger asChild>
