@@ -10,8 +10,8 @@ const fontSans = FontSans({
    variable: '--font-sans',
 })
 export const metadata: Metadata = {
-   title: 'Nyxcn UI',
-   description: 'The startup template from Nyxcn UI',
+   title: 'Lemon Convert',
+   description: 'Locally convert between different files formats, units and measurements.',
 }
 
 export default function RootLayout({

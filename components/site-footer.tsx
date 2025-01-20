@@ -76,13 +76,13 @@ export function SiteFooter() {
                   <Link href="/" className="flex items-center gap-2">
                      {/*<Image
                         src="/"
-                        alt="Nyxcn UI Logo"
+                        alt="Lemon Convert"
                         className="text-primary size-8"
                         width={32}
                         height={32}
                      />*/}
                      <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
-                        Nyxcn UI
+                     Lemon Convert
                      </span>
                   </Link>
                   <p className="max-w-xs">UI Library for Design Engineers</p>
@@ -129,7 +129,7 @@ export function SiteFooter() {
                   {new Date().getFullYear()}
                   {' '}
                   <Link href="/" className="cursor-pointer">
-                     Nyxcn UI
+                  Lemon Convert
                   </Link>
                   . All Rights Reserved.
                </span>
