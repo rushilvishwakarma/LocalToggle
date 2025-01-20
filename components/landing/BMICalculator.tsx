@@ -1,10 +1,18 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Calculator } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calculator } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { CakeIcon } from "lucide-react";;
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
 import {
   MorphingDialog,
   MorphingDialogTrigger,
@@ -13,10 +21,10 @@ import {
   MorphingDialogClose,
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
-import { PlusIcon, ArrowUpDown } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 
 const weightUnits = [
-  { name: "Kilogram", symbol: "kg" },
+  { name: "Kilograms", symbol: "kg" },
   { name: "Pounds", symbol: "lbs" },
 ];
 
@@ -27,76 +35,45 @@ const heightUnits = [
   { name: "Inches", symbol: "in" },
 ];
 
-function convertWeight(value: number, fromUnit: string): number {
-  // Convert everything to kg for BMI calculation
-  switch (fromUnit) {
-    case "Kilogram":
-      return value;
-    case "Pounds":
-      return value * 0.45359237;
-    default:
-      return value;
-  }
-}
-
-function convertHeight(value: number, fromUnit: string): number {
-  // Convert everything to meters for BMI calculation
-  switch (fromUnit) {
-    case "Centimeters":
-      return value / 100;
-    case "Meters":
-      return value;
-    case "Feet":
-      return value * 0.3048;
-    case "Inches":
-      return value * 0.0254;
-    default:
-      return value;
-  }
-}
-
 export function BMICalculator() {
-  const [weightValue, setWeightValue] = useState<string>("0");
-  const [heightValue, setHeightValue] = useState<string>("0");
-  const [weightUnit, setWeightUnit] = useState<string>("Kilogram");
+  const [weightValue, setWeightValue] = useState<string>("");
+  const [heightValue, setHeightValue] = useState<string>("");
+  const [weightUnit, setWeightUnit] = useState<string>("Kilograms");
   const [heightUnit, setHeightUnit] = useState<string>("Centimeters");
-  const [bmi, setBmi] = useState<number>(0);
-
-  useEffect(() => {
-    const weight = parseFloat(weightValue);
-    const height = parseFloat(heightValue);
-    
-    if (!isNaN(weight) && !isNaN(height) && height > 0) {
-      const weightInKg = convertWeight(weight, weightUnit);
-      const heightInM = convertHeight(height, heightUnit);
-      const calculatedBMI = weightInKg / (heightInM * heightInM);
-      setBmi(Number(calculatedBMI.toFixed(2)));
-    } else {
-      setBmi(0);
-    }
-  }, [weightValue, heightValue, weightUnit, heightUnit]);
+  const [bmi, setBMI] = useState<number>(0);
 
   const getUnitSymbol = (unitName: string) => {
-    const wUnit = weightUnits.find(u => u.name === unitName);
-    const hUnit = heightUnits.find(u => u.name === unitName);
-    return wUnit?.symbol || hUnit?.symbol || '';
+    const unit = [...weightUnits, ...heightUnits].find(u => u.name === unitName);
+    return unit ? unit.symbol : "";
+  };
+
+  const convertToMetric = (value: number, unit: string): number => {
+    switch(unit) {
+      case "Pounds": return value * 0.453592; // to kg
+      case "Feet": return value * 30.48; // to cm
+      case "Inches": return value * 2.54; // to cm
+      case "Meters": return value * 100; // to cm
+      default: return value;
+    }
   };
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value.length <= 7 && // Limit length to 7 characters
-        (/^\d*\.?\d*$/.test(value) || value === '')) { // Only positive numbers
-      setWeightValue(value);
-    }
+    setWeightValue(e.target.value);
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value.length <= 7 && // Limit length to 7 characters
-        (/^\d*\.?\d*$/.test(value) || value === '')) { // Only positive numbers
-      setHeightValue(value);
-    }
+    setHeightValue(e.target.value);
   };
+
+  useEffect(() => {
+    if (weightValue && heightValue) {
+      const weightInKg = convertToMetric(parseFloat(weightValue), weightUnit);
+      const heightInCm = convertToMetric(parseFloat(heightValue), heightUnit);
+      const heightInM = heightInCm / 100;
+      const bmiValue = weightInKg / (heightInM * heightInM);
+      setBMI(Math.round(bmiValue * 10) / 10);
+    }
+  }, [weightValue, heightValue, weightUnit, heightUnit]);
 
   const getBMICategory = (bmi: number): string => {
     if (bmi < 18.5) return "Underweight";
