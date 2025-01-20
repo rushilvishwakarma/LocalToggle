@@ -76,7 +76,8 @@ export function TempCalculator() {
     const numericValue = parseFloat(inputValue);
     if (!isNaN(numericValue)) {
       const result = convertTemperature(numericValue, fromUnit, toUnit);
-      setConvertedValue(result);
+      // Round to 2 decimal places
+      setConvertedValue(Number(result.toFixed(2)));
     } else {
       setConvertedValue(0);
     }

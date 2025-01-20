@@ -84,8 +84,8 @@ export function DateCalculator() {
               Date Calculator
             </MorphingDialogTitle>
             
-                        {/* Date inputs side by side */}
-                        <div className="mt-6 grid grid-cols-2 gap-4">
+                        {/* Date inputs responsive layout */}
+                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
                   From Date
