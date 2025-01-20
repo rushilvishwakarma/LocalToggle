@@ -152,10 +152,14 @@ export function DataCalculator() {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal"
+                        className="w-[180px] w-full justify-start text-left font-normal"
                       >
-                        {fromUnit} {getUnitSymbol(fromUnit)}
-                      </Button>
+                        {fromUnit}
+                        <span className="text-xs text-gray-500">
+                          {getUnitSymbol(fromUnit)}
+                         </span>
+                     </Button>
+
                     </PopoverTrigger>
                     <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
                       <div className="grid grid-cols-2 gap-2">
@@ -193,10 +197,15 @@ export function DataCalculator() {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal"
+                        className="w-[180px] w-full justify-start text-left font-normal"
                       >
-                        {toUnit} {getUnitSymbol(toUnit)}
-                      </Button>
+                        {toUnit}
+                        <span className="text-xs text-gray-500">
+                          {getUnitSymbol(toUnit)}
+                         </span>
+                     </Button>
+
+
                     </PopoverTrigger>
                     <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
                       <div className="grid grid-cols-2 gap-2">

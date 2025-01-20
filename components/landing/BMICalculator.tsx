@@ -35,31 +35,12 @@ const heightUnits = [
   { name: "Inches", symbol: "in" },
 ];
 
-// Add this custom hook at the top level
-const useIsMobile = () => {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkIsMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkIsMobile();
-    window.addEventListener('resize', checkIsMobile);
-    
-    return () => window.removeEventListener('resize', checkIsMobile);
-  }, []);
-
-  return isMobile;
-};
-
 export function BMICalculator() {
   const [weightValue, setWeightValue] = useState<string>("");
   const [heightValue, setHeightValue] = useState<string>("");
   const [weightUnit, setWeightUnit] = useState<string>("Kilograms");
   const [heightUnit, setHeightUnit] = useState<string>("Centimeters");
   const [bmi, setBMI] = useState<number>(0);
-  const isMobile = useIsMobile();
 
   const getUnitSymbol = (unitName: string) => {
     const unit = [...weightUnits, ...heightUnits].find(u => u.name === unitName);
@@ -163,13 +144,15 @@ export function BMICalculator() {
                       value={weightValue}
                       onChange={handleWeightChange}
                       className="flex-1"
-                      autoFocus={!isMobile}
                     />
                     <Popover>
                       <PopoverTrigger asChild>
                       <Button variant="outline" className="w-[180px]">
-                        {weightUnit} {getUnitSymbol(weightUnit)}
-                        </Button>
+                        {weightUnit}
+                        <span className="text-xs text-gray-500">
+                        {getUnitSymbol(weightUnit)}
+                            </span>
+                      </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
                         <div className="grid grid-cols-1 gap-2">
@@ -206,13 +189,15 @@ export function BMICalculator() {
                       value={heightValue}
                       onChange={handleHeightChange}
                       className="flex-1"
-                      autoFocus={!isMobile}
                     />
                     <Popover>
                       <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-[180px]">
-                          {heightUnit} {getUnitSymbol(heightUnit)}
-                        </Button>
+                        <Button variant="outline" className="w-[180px]">
+                        {heightUnit}
+                        <span className="text-xs text-gray-500">
+                        {getUnitSymbol(heightUnit)}
+                            </span>
+                      </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
                         <div className="grid grid-cols-1 gap-2">

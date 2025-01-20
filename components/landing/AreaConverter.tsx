@@ -14,6 +14,7 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const units = [
   { name: "Square Kilometers", symbol: "km²" },
@@ -195,48 +196,78 @@ export function AreaCalculator() {
             <div className="mt-4 flex flex-col gap-3 items-center">
 
               {/* From and To Unit Pickers with Swap Button */}
-              <div className="flex items-center justify-between w-full gap-2">
+              <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
                   <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     From
                   </label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
+                    <Button
                         variant="outline"
                         className="w-full justify-start text-left font-normal"
                       >
-                        {fromUnit} {getUnitSymbol(fromUnit)}
+                        {fromUnit} 
+                        <span className="text-xs text-gray-500">
+                        {getUnitSymbol(fromUnit)}
+                            </span>
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[600px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-4 gap-2">
-                        {units.map((unit) => (
-                          <Button
-                            key={unit.name}
-                            variant="ghost"
-                            onClick={() => setFromUnit(unit.name)}
-                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                          >
-                            <span className="text-left">{unit.name}</span>
-                            <span className="ml-2 text-gray-500 shrink-0">
-                              {unit.symbol}
-                            </span>
-                          </Button>
-                        ))}
+
+                    <PopoverContent className="w-[280px] sm:w-[600px] p-0" align="start">
+                      {/* Mobile view with ScrollArea */}
+                      <div className="block sm:hidden">
+                        <ScrollArea className="h-[300px] p-4">
+                          <div className="grid grid-cols-2 gap-2">
+                            {units.map((unit) => (
+                              <Button
+                                key={unit.name}
+                                variant="ghost"
+                                onClick={() => setFromUnit(unit.name)}
+                                className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                              >
+                                <span className="text-left">{unit.name}</span>
+                                <span className="ml-2 text-gray-500 shrink-0">
+                                  {unit.symbol}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                      {/* Desktop view without ScrollArea */}
+                      <div className="hidden sm:block p-4">
+                        <div className="grid grid-cols-4 gap-2">
+                          {units.map((unit) => (
+                            <Button
+                              key={unit.name}
+                              variant="ghost"
+                              onClick={() => setFromUnit(unit.name)}
+                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                            >
+                              <span className="text-left">{unit.name}</span>
+                              <span className="ml-2 text-gray-500 shrink-0">
+                                {unit.symbol}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>
                 </div>
 
                 {/* Swap Button */}
-                <div className="pt-5">
-                <Button 
-                variant="ghost"
-                onClick={handleSwapUnits} className="my-2">
-                  <ArrowUpDown className="w-5 h-5" />
-                </Button>
+                <div className="flex justify-center w-full sm:w-auto py-2 sm:pt-5">
+                  <Button 
+                    variant="ghost"
+                    onClick={handleSwapUnits}
+                    className="rotate-90 sm:rotate-0"
+                  >
+                    <ArrowUpDown className="w-5 h-5" />
+                  </Button>
                 </div>
+
                 <div className="flex flex-col w-full">
                   <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     To
@@ -247,24 +278,48 @@ export function AreaCalculator() {
                         variant="outline"
                         className="w-full justify-start text-left font-normal"
                       >
-                        {toUnit} {getUnitSymbol(toUnit)}
+                        {toUnit} 
+                        <span className="text-xs text-gray-500">
+                        {getUnitSymbol(toUnit)}
+                            </span>
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[600px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-4 gap-2">
-                        {units.map((unit) => (
-                          <Button
-                            key={unit.name}
-                            variant="ghost"
-                            onClick={() => setToUnit(unit.name)}
-                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                          >
-                            <span className="text-left">{unit.name}</span>
-                            <span className="ml-2 text-gray-500 shrink-0">
-                              {unit.symbol}
-                            </span>
-                          </Button>
-                        ))}
+                    <PopoverContent className="w-[280px] sm:w-[600px] p-0" align="start">
+                      <div className="block sm:hidden">
+                        <ScrollArea className="h-[300px] p-4">
+                          <div className="grid grid-cols-2 gap-2">
+                            {units.map((unit) => (
+                              <Button
+                                key={unit.name}
+                                variant="ghost"
+                                onClick={() => setToUnit(unit.name)}
+                                className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                              >
+                                <span className="text-left">{unit.name}</span>
+                                <span className="ml-2 text-gray-500 shrink-0">
+                                  {unit.symbol}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                      <div className="hidden sm:block p-4">
+                        <div className="grid grid-cols-4 gap-2">
+                          {units.map((unit) => (
+                            <Button
+                              key={unit.name}
+                              variant="ghost"
+                              onClick={() => setToUnit(unit.name)}
+                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                            >
+                              <span className="text-left">{unit.name}</span>
+                              <span className="ml-2 text-gray-500 shrink-0">
+                                {unit.symbol}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -272,7 +327,7 @@ export function AreaCalculator() {
               </div>
 
               {/* Input Value */}
-              <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
                   Value
                 </label>
@@ -281,7 +336,7 @@ export function AreaCalculator() {
                   placeholder="0"
                   value={inputValue}
                   onChange={handleInputChange}
-                  className="w-[400px] p-2 border border-gray-300 rounded-md"
+                  className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"
                 />
               </div>
 

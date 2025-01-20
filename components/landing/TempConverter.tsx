@@ -157,12 +157,15 @@ export function TempCalculator() {
                   </label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-start text-left font-normal"
-                      >
-                        {fromUnit} {getUnitSymbol(fromUnit)}
-                      </Button>
+                                            <Button
+                                              variant="outline"
+                                              className="w-[180px] w-full justify-start text-left font-normal"
+                                            >
+                                              {fromUnit}
+                                              <span className="text-xs text-gray-500">
+                                              {getUnitSymbol(fromUnit)}
+                                              </span>
+                                            </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
                       <div className="grid grid-cols-1 gap-2">
@@ -200,9 +203,12 @@ export function TempCalculator() {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal"
+                        className="w-[180px] w-full justify-start text-left font-normal"
                       >
-                        {toUnit} {getUnitSymbol(toUnit)}
+                        {toUnit}
+                        <span className="text-xs text-gray-500">
+                        {getUnitSymbol(toUnit)}
+                        </span>
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
