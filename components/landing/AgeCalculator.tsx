@@ -75,12 +75,12 @@ export function AgeCalculator() {
       </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-        <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+        <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
             Age Calculator
           </MorphingDialogTitle>
           <button
             type="button"
-            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-500 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-gray-500 dark:hover:bg-zinc-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
+            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
             aria-label="Open dialog"
           >
             <PlusIcon size={12} />
@@ -92,7 +92,7 @@ export function AgeCalculator() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
         >
           {/* Dialog Content */}
           <div className="px-6 pt-6 pb-3">
@@ -102,7 +102,7 @@ export function AgeCalculator() {
             <div className="mt-4 flex flex-col gap-3 items-center">
               {/* Date of Birth Picker */}
               <div className="flex items-center justify-between w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Date of Birth
                 </label>
                 <Popover>
@@ -131,7 +131,7 @@ export function AgeCalculator() {
 
               {/* Today Date Picker */}
               <div className="flex items-center justify-between w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Today
                 </label>
                 <Popover>
@@ -160,7 +160,7 @@ export function AgeCalculator() {
 
               <div className="mt-2 mb-3 grid w-full gap-2 grid-cols-2">
                 {/* Age Section */}
-                <div className="bg-zinc-900 dark:bg-zinc-800 rounded-l-3xl rounded-r-md p-6 text-center flex flex-col justify-between">
+                <div className="bg-neutral-950 dark:bg-neutral-800 rounded-l-3xl rounded-r-md p-6 text-center flex flex-col justify-between">
                   {/* Age Label */}
                   <p className="text-3xl font-medium text-gray-50">Age</p>
 
@@ -179,7 +179,7 @@ export function AgeCalculator() {
                 </div>
 
                 {/* Next Birthday Section */}
-                <div className="bg-zinc-900 dark:bg-zinc-800 rounded-r-3xl rounded-l-md p-6 text-center flex flex-col justify-between">
+                <div className="bg-neutral-950 dark:bg-neutral-800 rounded-r-3xl rounded-l-md p-6 text-center flex flex-col justify-between">
                   {/* Next Birthday Label */}
                   <p className="text-lg font-medium text-amber-400">Next Birthday</p>
 
@@ -207,7 +207,7 @@ export function AgeCalculator() {
                       Summary
                     </AccordionTrigger>
                     <AccordionContent>
-                      <div className="w-full bg-zinc-900 dark:bg-zinc-800 rounded-2xl p-6">
+                      <div className="w-full bg-neutral-950 dark:bg-neutral-800 rounded-2xl p-6">
                         <div className="grid grid-cols-3 gap-y-4 text-center">
                           {/* Age in Years */}
                           <div>

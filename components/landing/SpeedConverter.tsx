@@ -34,7 +34,7 @@ function convertSpeed(value: number, fromUnit: string, toUnit: string): number {
 }
 
 export function SpeedConverter() {
-  const [inputValue, setInputValue] = useState<string>("0");
+  const [inputValue, setInputValue] = useState<string>("");  // Changed from "0" to ""
   const [fromUnit, setFromUnit] = useState<string>("m/s");
   const [toUnit, setToUnit] = useState<string>("km/h");
   const [convertedValue, setConvertedValue] = useState<string>("0");
@@ -80,12 +80,12 @@ export function SpeedConverter() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-          <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
             Speed Converter
           </MorphingDialogTitle>
           <button
             type="button"
-            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-500 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-gray-500 dark:hover:bg-zinc-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
+            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
             aria-label="Open dialog"
           >
             <PlusIcon size={12} />
@@ -97,7 +97,7 @@ export function SpeedConverter() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
         >
           <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
@@ -106,7 +106,7 @@ export function SpeedConverter() {
             <div className="mt-4 flex flex-col gap-3 items-center">
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
                   </label>
                   <Popover>
@@ -120,7 +120,7 @@ export function SpeedConverter() {
                             <span className="truncate">
                               {speedUnits.find(u => u.symbol === fromUnit)?.name}
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-400">
                               {fromUnit}
                             </span>
                           </div>
@@ -138,7 +138,7 @@ export function SpeedConverter() {
                           >
                             <div className="flex flex-col items-start">
                               <span className="font-medium truncate">{unit.name}</span>
-                              <span className="text-gray-500 text-xs">{unit.symbol}</span>
+                              <span className="text-gray-400 text-xs">{unit.symbol}</span>
                             </div>
                           </Button>
                         ))}
@@ -159,7 +159,7 @@ export function SpeedConverter() {
                 </div>
 
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     To
                   </label>
                   <Popover>
@@ -173,7 +173,7 @@ export function SpeedConverter() {
                             <span className="truncate">
                               {speedUnits.find(u => u.symbol === toUnit)?.name}
                             </span>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-gray-400">
                               {toUnit}
                             </span>
                           </div>
@@ -191,7 +191,7 @@ export function SpeedConverter() {
                           >
                             <div className="flex flex-col items-start">
                               <span className="font-medium truncate">{unit.name}</span>
-                              <span className="text-gray-500 text-xs">{unit.symbol}</span>
+                              <span className="text-gray-400 text-xs">{unit.symbol}</span>
                             </div>
                           </Button>
                         ))}
@@ -202,12 +202,12 @@ export function SpeedConverter() {
               </div>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
                 <Input
                   type="text"
-                  placeholder="0"
+                  placeholder="Enter speed"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}
                   className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"

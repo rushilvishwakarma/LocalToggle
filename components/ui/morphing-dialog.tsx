@@ -19,6 +19,7 @@ import {
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 import { XIcon } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 
 export type MorphingDialogContextType = {
@@ -255,7 +256,7 @@ function MorphingDialogContent({
     <motion.div
       ref={containerRef}
       layoutId={`dialog-${uniqueId}`}
-      className={cn('overflow-hidden', className)}
+      className={cn('overflow-hidden border border-zinc-950/10 bg-[#080a0a]', className)}
       style={style}
       role='dialog'
       aria-modal='true'
@@ -295,7 +296,7 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
         <>
           <motion.div
             key={`backdrop-${uniqueId}`}
-            className='fixed inset-0 h-full w-full bg-black/70' // Dim the background without blur
+            className='fixed inset-0 h-full w-full bg-black/90 z-20' // Added z-20
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -452,10 +453,7 @@ function MorphingDialogClose({
   }, [setIsOpen]);
 
   return (
-    <motion.button
-      onClick={handleClose}
-      type='button'
-      aria-label='Close dialog'
+    <motion.div
       key={`dialog-close-${uniqueId}`}
       className={cn('absolute right-6 top-6', className)}
       initial='initial'
@@ -463,8 +461,16 @@ function MorphingDialogClose({
       exit='exit'
       variants={variants}
     >
-      {children || <XIcon size={24} />}
-    </motion.button>
+      <Button 
+        onClick={handleClose}
+        className="rounded-full" 
+        variant="outline" 
+        size="icon" 
+        aria-label="Close dialog"
+      >
+        {children || <XIcon size={16} strokeWidth={2} aria-hidden="true" />}
+      </Button>
+    </motion.div>
   );
 }
 

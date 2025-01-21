@@ -1,5 +1,5 @@
 
-import UnitConversions from '@/components/landing/calculations'
+import UnitConversions from '@/components/landing/conversion-grid'
 
 import { SphereMask } from '@/components/ui/sphere-mask'
 

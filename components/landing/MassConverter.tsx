@@ -71,7 +71,7 @@ function convertMass(value: number, fromUnit: string, toUnit: string): number {
 }
 
 export function MassCalculator() {
-  const [inputValue, setInputValue] = useState<string>("0");
+  const [inputValue, setInputValue] = useState<string>("");  // Changed from "0" to ""
   const [fromUnit, setFromUnit] = useState<string>("Kilograms");
   const [toUnit, setToUnit] = useState<string>("Pounds");
   const [convertedValue, setConvertedValue] = useState<number>(0);
@@ -127,12 +127,12 @@ export function MassCalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-          <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
             Mass Converter
           </MorphingDialogTitle>
           <button
             type="button"
-            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-500 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-gray-500 dark:hover:bg-zinc-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
+            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
             aria-label="Open dialog"
           >
             <PlusIcon size={12} />
@@ -144,7 +144,7 @@ export function MassCalculator() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
         >
           {/* Dialog Content */}
           <div className="px-6 pt-6 pb-3">
@@ -156,7 +156,7 @@ export function MassCalculator() {
               {/* From and To Unit Pickers with Swap Button */}
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
                   </label>
                   <Popover>
@@ -166,7 +166,7 @@ export function MassCalculator() {
                                               className="w-[180px] w-full justify-start text-left font-normal"
                                             >
                                               {fromUnit}
-                                              <span className="text-xs text-gray-500">
+                                              <span className="text-xs text-gray-400">
                                               {getUnitSymbol(fromUnit)}
                                               </span>
                                             </Button>
@@ -184,7 +184,7 @@ export function MassCalculator() {
                                 className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
                               >
                                 <span className="text-left">{unit.name}</span>
-                                <span className="ml-2 text-gray-500 shrink-0">
+                                <span className="ml-2 text-gray-400 shrink-0">
                                   {unit.symbol}
                                 </span>
                               </Button>
@@ -203,7 +203,7 @@ export function MassCalculator() {
                               className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
                             >
                               <span className="text-left">{unit.name}</span>
-                              <span className="ml-2 text-gray-500 shrink-0">
+                              <span className="ml-2 text-gray-400 shrink-0">
                                 {unit.symbol}
                               </span>
                             </Button>
@@ -226,7 +226,7 @@ export function MassCalculator() {
                 </div>
 
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     To
                   </label>
                   <Popover>
@@ -236,7 +236,7 @@ export function MassCalculator() {
                         className="w-[180px] w-full justify-start text-left font-normal"
                       >
                         {toUnit}
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-400">
                         {getUnitSymbol(toUnit)}
                         </span>
                       </Button>
@@ -254,7 +254,7 @@ export function MassCalculator() {
                                 className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
                               >
                                 <span className="text-left">{unit.name}</span>
-                                <span className="ml-2 text-gray-500 shrink-0">
+                                <span className="ml-2 text-gray-400 shrink-0">
                                   {unit.symbol}
                                 </span>
                               </Button>
@@ -273,7 +273,7 @@ export function MassCalculator() {
                               className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
                             >
                               <span className="text-left">{unit.name}</span>
-                              <span className="ml-2 text-gray-500 shrink-0">
+                              <span className="ml-2 text-gray-400 shrink-0">
                                 {unit.symbol}
                               </span>
                             </Button>
@@ -287,15 +287,15 @@ export function MassCalculator() {
 
               {/* Input Value */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
                 <Input
                   type="text"
-                  placeholder="0"
+                  placeholder="Enter mass"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}
-                  className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"
+                  className="w-full sm:w-[300px] p-2 border border-gray-300 rounded-md"
                 />
               </div>
 

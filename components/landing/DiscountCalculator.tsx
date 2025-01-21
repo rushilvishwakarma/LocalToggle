@@ -79,12 +79,12 @@ export function DiscountCalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-          <MorphingDialogTitle className="text-md text-gray-700 dark:text-gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
             Discount Calculator
           </MorphingDialogTitle>
           <button
             type="button"
-            className="relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-500 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-zinc-900 dark:text-gray-500 dark:hover:bg-zinc-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
+            className="relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
             aria-label="Open dialog"
           >
             <PlusIcon size={12} />
@@ -96,7 +96,7 @@ export function DiscountCalculator() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-zinc-900 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
         >
           <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
@@ -105,7 +105,7 @@ export function DiscountCalculator() {
             <div className="mt-4 flex flex-col gap-3">
               {/* Original Price Input */}
               <div className="flex flex-col w-full">
-                <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400 flex items-center gap-1">
+                <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400 flex items-center gap-1">
                   Original Price <HandCoins size={16} />
                 </label>
                 <Input
@@ -119,7 +119,7 @@ export function DiscountCalculator() {
 
               {/* Discount Percentage Input */}
               <div className="flex flex-col w-full">
-                <label className="pb-2 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Discount (%)
                 </label>
                 <Input

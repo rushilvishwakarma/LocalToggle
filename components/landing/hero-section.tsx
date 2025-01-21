@@ -1,6 +1,6 @@
 'use client'
 
-import Dropzone from '@/components/ui/dropzone';
+import Dropzone from '@/components/ui/conversion-area';
 import { useRef } from 'react'
 
 

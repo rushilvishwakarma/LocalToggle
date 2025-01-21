@@ -265,7 +265,7 @@ export default function Dropzone() {
         {actions.map((action: Action, i: any) => (
           <div
             key={i}
-            className="px-5 w-full py-4 lg:py-0 rounded-3xl border border-white/10 bg-white bg-opacity-[0.01] relative cursor-pointer rounded-xl border h-fit lg:h-20 lg:px-10 flex flex-wrap lg:flex-nowrap items-center justify-between"
+            className="gap-2 px-5 w-full py-4 lg:py-0 rounded-3xl border border-white/10 bg-white bg-opacity-[0.01] relative cursor-pointer rounded-xl border h-fit lg:h-20 lg:px-10 flex flex-wrap lg:flex-nowrap items-center justify-between"
           >
             {!is_loaded && (
               <Skeleton className="h-full w-full -ml-10 cursor-progress absolute rounded-xl" />
@@ -391,25 +391,78 @@ export default function Dropzone() {
             )}
           </div>
         ))}
-        <div className="space-x-3 mt-4 flex justify-between">
+        <div className="space-x-3 mt-4 flex flex-wrap justify-between">
           <Select
             onValueChange={(value) => convertAllTo(value)}
             disabled={!isSameFormat}
           >
-            <SelectTrigger className="w-52 outline-none focus:outline-none focus:ring-0 text-center text-muted-foreground bg-background text-md font-medium">
+            <SelectTrigger className="w-38 outline-none focus:outline-none focus:ring-0 text-center text-muted-foreground bg-background text-md font-medium">
               <SelectValue placeholder="Convert All To..." />
             </SelectTrigger>
             <SelectContent className="h-fit">
-              <div className="grid grid-cols-2 gap-2 w-fit">
-                {isSameFormat && actions.length > 0 && getPossibleExtensions(actions[0].file_type).map((ext, i) => (
-                  <SelectItem key={i} value={ext}>
-                    {ext}
-                  </SelectItem>
-                ))}
-              </div>
+              {actions.length > 0 && (
+              <>
+                {actions[0].file_type.includes("image") && (
+                <div className="grid grid-cols-2 gap-2 w-fit">
+                  {extensions.image.map((elt, i) => (
+                  <div key={i} className="col-span-1 text-center">
+                    <SelectItem value={elt} className="mx-auto">
+                    {elt}
+                    </SelectItem>
+                  </div>
+                  ))}
+                </div>
+                )}
+                {actions[0].file_type.includes("video") && (
+                <Tabs defaultValue={defaultValues} className="w-full">
+                  <TabsList className="w-full mb-1">
+                  <TabsTrigger value="video" className="w-full">
+                    Video
+                  </TabsTrigger>
+                  <TabsTrigger value="audio" className="w-full">
+                    Audio
+                  </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="video">
+                  <div className="grid grid-cols-3 gap-2 w-fit">
+                    {extensions.video.map((elt, i) => (
+                    <div key={i} className="col-span-1 text-center">
+                      <SelectItem value={elt} className="mx-auto">
+                      {elt}
+                      </SelectItem>
+                    </div>
+                    ))}
+                  </div>
+                  </TabsContent>
+                  <TabsContent value="audio">
+                  <div className="grid grid-cols-3 gap-2 w-fit">
+                    {extensions.audio.map((elt, i) => (
+                    <div key={i} className="col-span-1 text-center">
+                      <SelectItem value={elt} className="mx-auto">
+                      {elt}
+                      </SelectItem>
+                    </div>
+                    ))}
+                  </div>
+                  </TabsContent>
+                </Tabs>
+                )}
+                {actions[0].file_type.includes("audio") && (
+                <div className="grid grid-cols-2 gap-2 w-fit">
+                  {extensions.audio.map((elt, i) => (
+                  <div key={i} className="col-span-1 text-center">
+                    <SelectItem value={elt} className="mx-auto">
+                    {elt}
+                    </SelectItem>
+                  </div>
+                  ))}
+                </div>
+                )}
+              </>
+              )}
             </SelectContent>
           </Select>
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap space-x-3 lg:mt-0">
             <Button
               variant="secondary"
               className="py-3 w-auto text-md"
@@ -421,7 +474,7 @@ export default function Dropzone() {
               effect="shineHover"
               variant="secondary"
               disabled={is_converting || !is_ready}
-              className="py-3 w-52 text-md"
+              className="py-3 w-28 sm:w-18 md:w-48 text-md"
               onClick={is_done ? downloadAll : convert}
             >
               {is_converting ? (
@@ -485,7 +538,7 @@ export default function Dropzone() {
                   colorTo="var(--color-two)"
                 />
               </div>
-              <div className="py-16 space-y-4 text-foreground relative z-10">
+              <div className="py-16 space-y-4 text-foreground relative z-10 text-center">
                 {is_hover ? (
                   <>
                     <div className="text-balance tracking-tight text-gray-400 justify-center flex text-5xl">

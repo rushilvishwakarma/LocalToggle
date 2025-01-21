@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 # Features
 
--  Built using Next.js 14, React, Typescript, Nyxcn UI, TailwindCSS, Framer Motion
+-  Built using Next.js 14, React, Typescript, TailwindCSS, Framer Motion
 -  Header Section
 -  Hero Section
 -  Social Proof Section

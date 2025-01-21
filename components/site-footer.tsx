@@ -116,14 +116,14 @@ export function SiteFooter() {
                      <Link
                         key={social.name}
                         href={social.href}
-                        className="fill-gray-500 text-gray-500 hover:fill-gray-900 hover:text-gray-900 dark:hover:fill-gray-600 dark:hover:text-gray-600"
+                        className="fill-gray-500 text-gray-400 hover:fill-gray-900 hover:text-gray-900 dark:hover:fill-gray-600 dark:hover:text-gray-600"
                      >
                         {social.icon}
                         <span className="sr-only">{social.name}</span>
                      </Link>
                   ))}
                </div>
-               <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+               <span className="text-sm text-gray-400 sm:text-center dark:text-gray-400">
                   Copyright ©
                   {' '}
                   {new Date().getFullYear()}
