@@ -74,13 +74,13 @@ export function SiteFooter() {
             <div className="gap-4 p-4 px-8 py-16 sm:pb-16 md:flex md:justify-between">
                <div className="mb-12 flex flex-col gap-4">
                   <Link href="/" className="flex items-center gap-2">
-                     {/*<Image
-                        src="/"
+                     <Image
+                        src="/orange-slice-white.svg"
                         alt="Lemon Convert"
                         className="text-primary size-8"
                         width={32}
                         height={32}
-                     />*/}
+                     />
                      <span className="self-center whitespace-nowrap text-2xl font-semibold dark:text-white">
                      Lemon Convert
                      </span>

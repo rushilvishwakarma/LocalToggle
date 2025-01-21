@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState, useMemo } from 'react'
@@ -36,7 +37,13 @@ export function SiteHeader() {
       <header className="fixed left-1/2 top-4 z-10 w-[95%] max-w-5xl bg-background/15 -translate-x-1/2 rounded-2xl border px-5 py-2 shadow-xl backdrop-blur-lg">
          <div className="flex items-center justify-center md:justify-between h-8">
             <Link className="text-sm font-semibold hidden md:block" href="/">
-               Lemon Convert
+                                    <Image
+                                       src="/orange-slice-white.svg"
+                                       alt="Lemon Convert"
+                                       className="text-primary size-8"
+                                       width={40}
+                                       height={40}
+                                    />
             </Link>
             <div className="flex items-center">
                <Tabs value={currentTab} onValueChange={handleTabChange}>

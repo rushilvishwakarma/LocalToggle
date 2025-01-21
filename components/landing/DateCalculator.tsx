@@ -65,7 +65,7 @@ export function DateCalculator() {
           </MorphingDialogTitle>
           <button
             type="button"
-            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-800 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
+            className=" relative ml-auto flex h-6 w-6 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 text-gray-400 transition-colors hover:bg-zinc-100 hover:text-gray-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:bg-transparent dark:text-gray-400 dark:hover:bg-neutral-900 dark:hover:bg-[opacity-0.01] dark:hover:text-gray-50 dark:focus-visible:ring-zinc-500"
             aria-label="Open dialog"
           >
             <PlusIcon size={12} />
@@ -139,16 +139,16 @@ export function DateCalculator() {
 
 
             {/* Three containers for Year, Month, Days */}
-            <div className="mt-6 grid grid-cols-3 gap-4 pb-3">
-              <div className="bg-neutral-950 dark:bg-neutral-800 rounded-2xl p-4 text-center">
+            <div className="mt-6 grid grid-cols-3 gap-1.5 pb-4">
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-l-3xl rounded-r-md p-4 text-center">
                 <p className="text-lg text-gray-50">Years</p>
                 <p className="text-3xl font-bold text-amber-400 mt-2">{yearsDiff}</p>
               </div>
-              <div className="bg-neutral-950 dark:bg-neutral-800 rounded-2xl p-4 text-center">
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-md p-4 text-center">
                 <p className="text-lg text-gray-50">Months</p>
                 <p className="text-3xl font-bold text-amber-400 mt-2">{monthsDiff}</p>
               </div>
-              <div className="bg-neutral-950 dark:bg-neutral-800 rounded-2xl p-4 text-center">
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-r-3xl rounded-l-md p-4 text-center">
                 <p className="text-lg text-gray-50">Days</p>
                 <p className="text-3xl font-bold text-amber-400 mt-2">{daysDiff}</p>
               </div>
