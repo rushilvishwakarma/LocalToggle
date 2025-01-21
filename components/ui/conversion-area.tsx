@@ -12,10 +12,11 @@ import { useToast } from "@/hooks/use-toast";
 import compressFileName from "@/utils/compress-file-name";
 import { Skeleton } from "@/components/ui/skeleton";
 import convertFile from "@/utils/convert";
-import { ImSpinner3 } from "react-icons/im";
+import { Spinner } from "@phosphor-icons/react"; 
 import { MdDone } from "react-icons/md";
 import { Badge } from "@/components/ui/badge";
 import { BiError } from "react-icons/bi";
+import { IoBackspace } from "react-icons/io5";
 import { BorderBeam } from '@/components/ui/border-beam'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -30,6 +31,7 @@ import loadFfmpeg from "@/utils/load-ffmpeg";
 import type { Action } from "@/types";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { LinkPreview } from "@/components/ui/thumbnail";
+import { X } from "lucide-react";
 
 // Preset file extensions
 const extensions = {
@@ -271,26 +273,28 @@ export default function Dropzone() {
             {!is_loaded && (
               <Skeleton className="h-full w-full -ml-10 cursor-progress absolute rounded-xl" />
             )}
-            <div className="flex gap-4 items-center">
-              <span className="text-2xl text-orange-600">
-                {fileToIcon(action.file_type)}
-              </span>
-              <div className="flex items-center gap-3 w-full lg:w-96">
-                {action.file_type.startsWith("image/") && !disabledExtensions.some(ext => action.file_name.endsWith(ext)) ? (
-                  <LinkPreview url={action.file_name} imageSrc={URL.createObjectURL(action.file)} isStatic={true}>
-                    <span className="text-md font-medium overflow-x-hidden">
-                      {compressFileName(action.file_name)}
-                    </span>
-                  </LinkPreview>
-                ) : (
-                  <span className="text-md font-medium overflow-x-hidden">
-                    {compressFileName(action.file_name)}
-                  </span>
-                )}
-                <span className="text-muted-foreground text-sm">
-                  ({bytesToSize(action.file_size)})
-                </span>
-              </div>
+      <div className="flex gap-4 items-center">
+  <span className="text-2xl text-orange-600">
+    {fileToIcon(action.file_type)}
+  </span>
+  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-3 w-full">
+    {action.file_type.startsWith("image/") && !disabledExtensions.some(ext => action.file_name.endsWith(ext)) ? (
+      <LinkPreview url={action.file_name} imageSrc={URL.createObjectURL(action.file)} isStatic={true}>
+        <span className="text-md font-medium overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-full lg:overflow-visible lg:whitespace-nowrap lg:text-ellipsis max-w-[12ch] sm:pr-1">
+          {compressFileName(action.file_name)}
+        </span>
+      </LinkPreview>
+    ) : (
+      <span className="text-md font-medium overflow-hidden text-ellipsis whitespace-nowrap sm:max-w-full lg:overflow-visible lg:whitespace-nowrap lg:text-ellipsis max-w-[12ch] sm:pr-4">
+        {compressFileName(action.file_name)}
+      </span>
+    )}
+    <span className="text-xs text-gray-400 font-medium mt-2 overflow-hidden text-ellipsis whitespace-nowrap sm:w-full sm:mt-1 lg:max-w-full text-left">
+      ({bytesToSize(action.file_size)})
+    </span>
+  </div>
+
+
             </div>
             {action.is_error ? (
               <Badge variant="destructive" className="flex gap-2">
@@ -306,7 +310,7 @@ export default function Dropzone() {
               <Badge variant="default" className="flex gap-2">
                 <span>Converting</span>
                 <span className="animate-spin">
-                  <ImSpinner3 />
+                  <Spinner />
                 </span>
               </Badge>
             ) : (
@@ -392,7 +396,7 @@ export default function Dropzone() {
             )}
           </div>
         ))}
-        <div className="space-x-3 mt-4 flex flex-wrap justify-between">
+        <div className="space-x-1 mt-4 flex flex-wrap justify-between">
           <Select
             onValueChange={(value) => convertAllTo(value)}
             disabled={!isSameFormat}
@@ -465,13 +469,18 @@ export default function Dropzone() {
             </SelectContent>
           </Select>
           <div className="flex flex-wrap space-x-3 lg:mt-0">
-            <Button
-              variant="secondary"
-              className="py-3 w-auto text-md"
-              onClick={() => reset()}
-            >
-              Reset
-            </Button>
+          <Button
+  variant="secondary"
+  className="sm:py-3 py-0 w-auto text-md flex items-center"
+  onClick={() => reset()}
+>
+  <IoBackspace className="opacity-60" size={28} strokeWidth={2} aria-hidden="true" />
+  <span className="hidden sm:inline">
+    {is_done ? "Convert More file(s)" : "Reset"}
+  </span>
+</Button>
+
+
             <Button
               effect="shineHover"
               variant="secondary"
@@ -482,7 +491,7 @@ export default function Dropzone() {
               {is_converting ? (
                 <>
                   <span className="animate-spin">
-                    <ImSpinner3 />
+                    <Spinner />
                   </span>
                   Converting
                 </>
