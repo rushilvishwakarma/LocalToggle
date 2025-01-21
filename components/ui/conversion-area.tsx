@@ -2,6 +2,7 @@
 
 // imports
 import { FiUpload } from "react-icons/fi";
+import { SquareStack } from 'lucide-react';
 import { TbDragDrop2 } from "react-icons/tb";
 import ReactDropzone from "react-dropzone";
 import bytesToSize from "@/utils/bytes-to-size";
@@ -397,7 +398,8 @@ export default function Dropzone() {
             disabled={!isSameFormat}
           >
             <SelectTrigger className="w-38 outline-none focus:outline-none focus:ring-0 text-center text-muted-foreground bg-background text-md font-medium">
-              <SelectValue placeholder="Convert All To..." />
+              <SquareStack className="inline-block mr-2" />
+              <SelectValue placeholder="All To..." />
             </SelectTrigger>
             <SelectContent className="h-fit">
               {actions.length > 0 && (
