@@ -113,7 +113,7 @@ export function NumeralSystemConverter() {
         >
           <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
-              Number System Converter
+              Number System
             </MorphingDialogTitle>
             <div className="mt-4 flex flex-col gap-3 items-center">
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">

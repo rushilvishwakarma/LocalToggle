@@ -17,9 +17,9 @@ import { TimeConverter } from '@/components/landing/TimeConverter';
 export default function HeroSection() {
    return (
 <section
-  className="min-h-screen pt-6 pb-2 relative mx-auto mt-20 max-w-5xl px-6 text-center md:px-8"
+  className="min-h-screen pt-6 pb-2 relative mx-auto mt-16 max-w-5xl px-6 text-center md:px-8"
 >
-  <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
+  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 justify-items-center">
     <div className="w-full">
       <AgeCalculator />
     </div>
