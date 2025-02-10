@@ -7,6 +7,7 @@ import { CakeIcon } from "lucide-react";;
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { AuroraText } from "@/components/ui/aurora-text"
 import {
   Popover,
   PopoverContent,
@@ -67,11 +68,20 @@ export function BMICalculator() {
 
   useEffect(() => {
     if (weightValue && heightValue) {
-      const weightInKg = convertToMetric(parseFloat(weightValue), weightUnit);
-      const heightInCm = convertToMetric(parseFloat(heightValue), heightUnit);
-      const heightInM = heightInCm / 100;
-      const bmiValue = weightInKg / (heightInM * heightInM);
-      setBMI(Math.round(bmiValue * 10) / 10);
+      const weightNum = parseFloat(weightValue);
+      const heightNum = parseFloat(heightValue);
+      
+      if (!isNaN(weightNum) && !isNaN(heightNum) && weightNum > 0 && heightNum > 0) {
+        const weightInKg = convertToMetric(weightNum, weightUnit);
+        const heightInCm = convertToMetric(heightNum, heightUnit);
+        const heightInM = heightInCm / 100;
+        const bmiValue = weightInKg / (heightInM * heightInM);
+        setBMI(Math.round(bmiValue * 10) / 10);
+      } else {
+        setBMI(0);
+      }
+    } else {
+      setBMI(0);
     }
   }, [weightValue, heightValue, weightUnit, heightUnit]);
 
@@ -223,12 +233,14 @@ export function BMICalculator() {
 
               {/* BMI Result */}
               <div className="mt-4 mb-4 text-center">
-                <p className="text-3xl font-bold text-amber-400">
-                  BMI: {bmi}
-                </p>
-                <p className="pt-2 text-sm font-normal text-gray-50">
-                  {getBMICategory(bmi)}
-                </p>
+                <AuroraText className="text-3xl font-bold">
+                  {bmi > 0 ? `BMI: ${bmi}` : 'BMI'}
+                </AuroraText>
+                {bmi > 0 && (
+                  <p className="pt-2 text-sm font-semibold tracking-wide text-gray-50/90">
+                    {getBMICategory(bmi)}
+                  </p>
+                )}
               </div>
             </div>
           </div>

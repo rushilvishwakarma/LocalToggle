@@ -14,6 +14,7 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
+import { AuroraText } from "@/components/ui/aurora-text";
 
 const units = [
   { name: "Celsius", symbol: "°C" },
@@ -249,9 +250,9 @@ export function TempCalculator() {
 
               {/* Converted Value */}
               <div className="mt-4 mb-4 text-center">
-                <p className="text-3xl font-bold text-amber-400">
+                <AuroraText className="text-3xl font-bold">
                   {convertedValue} {getUnitSymbol(toUnit)}
-                </p>
+                </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toUnit}
                 </p>

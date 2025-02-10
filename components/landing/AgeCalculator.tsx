@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   format,
+  parse,
   differenceInYears,
   differenceInMonths,
   differenceInDays,
@@ -14,8 +15,10 @@ import {
   differenceInMinutes,
   differenceInSeconds,
   isSameDay,
+  isAfter,
+  set,
 } from "date-fns";
-import { CakeIcon, PlusIcon, CalendarIcon } from "lucide-react";
+import { CakeIcon, PlusIcon, CalendarIcon, Clock, LockIcon, UnlockIcon } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -37,44 +40,210 @@ import {
   MorphingDialogClose,
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
+import { AuroraText } from "@/components/ui/aurora-text"
 
 export function AgeCalculator() {
+  const defaultTime = "12:00:00 AM";
   const [birthDate, setBirthDate] = useState<Date>();
-  const [todayDate, setTodayDate] = useState<Date>(new Date());
+  const [birthTime, setBirthTime] = useState<string>(defaultTime);
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [isRealtime, setIsRealtime] = useState(true);
+  const [manualTime, setManualTime] = useState<string>(defaultTime);
 
-  const currentTime = new Date(); // Current exact time
+  // Function to check if a date is disabled (future date)
+  const isDateDisabled = (date: Date) => {
+    if (!date) return false;
+    
+    // For the current date, check the time as well
+    if (isSameDay(date, currentTime)) {
+      const [currentHours, currentMinutes, currentSeconds] = [
+        currentTime.getHours(),
+        currentTime.getMinutes(),
+        currentTime.getSeconds()
+      ];
+      
+      const selectedTime = birthTime || defaultTime;
+      const time24 = convertTo24Hour(selectedTime);
+      if (!time24) return false;
+      
+      const [selectedHours, selectedMinutes, selectedSeconds] = time24.split(':').map(Number);
+      
+      // Compare times for the same day
+      if (currentHours < selectedHours) return true;
+      if (currentHours === selectedHours && currentMinutes < selectedMinutes) return true;
+      if (currentHours === selectedHours && currentMinutes === selectedMinutes && currentSeconds < selectedSeconds) return true;
+    }
+    
+    // For different dates, just check if it's in the future
+    return isAfter(date, currentTime);
+  };
 
-  // Calculate age
-  const ageYears = birthDate ? differenceInYears(currentTime, birthDate) : 0;
-  const adjustedBirthDate = birthDate ? addYears(birthDate, ageYears) : undefined;
-  const ageMonths = birthDate && adjustedBirthDate
-    ? differenceInMonths(currentTime, adjustedBirthDate)
-    : 0;
-  const adjustedMonthDate = birthDate && adjustedBirthDate
-    ? addMonths(adjustedBirthDate, ageMonths)
+  // Convert 12-hour format to 24-hour format
+  const convertTo24Hour = (time12h: string): string | null => {
+    try {
+      const [time, period] = time12h.split(' ');
+      if (!time || !period) return null;
+      
+      const [hoursStr, minutes, seconds] = time.split(':');
+      const hours = parseInt(hoursStr, 10);
+      if (isNaN(hours) || isNaN(parseInt(minutes, 10)) || isNaN(parseInt(seconds, 10))) return null;
+      
+      let hour = hours;
+      
+      if (period.toLowerCase() === 'pm' && hour < 12) {
+        hour += 12;
+      }
+      if (period.toLowerCase() === 'am' && hour === 12) {
+        hour = 0;
+      }
+      
+      if (hour < 0 || hour > 23 || parseInt(minutes, 10) < 0 || parseInt(minutes, 10) > 59 || parseInt(seconds, 10) < 0 || parseInt(seconds, 10) > 59) {
+        return null;
+      }
+      
+      return `${hour.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  // Convert 24-hour format to 12-hour format
+  const convertTo12Hour = (time24h: string): string => {
+    const [hours, minutes, seconds] = time24h.split(':');
+    let hour = parseInt(hours, 10);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    
+    if (hour > 12) hour -= 12;
+    if (hour === 0) hour = 12;
+    
+    return `${hour.toString().padStart(2, '0')}:${minutes}:${seconds} ${period}`;
+  };
+
+  // Update current time every second when in realtime mode
+  useEffect(() => {
+    if (isRealtime) {
+      const timer = setInterval(() => {
+        const now = new Date();
+        setCurrentTime(now);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    } else {
+      // When switching to manual mode, reset time to 12 AM
+      setManualTime(defaultTime);
+      const newDate = new Date(currentTime);
+      newDate.setHours(0, 0, 0);
+      setCurrentTime(newDate);
+    }
+  }, [isRealtime]);
+
+  // Handle manual time changes
+  const handleManualTimeChange = (newTime: string) => {
+    try {
+      const time24 = convertTo24Hour(newTime);
+      if (!time24) {
+        setManualTime(defaultTime);
+        const newDate = new Date(currentTime);
+        newDate.setHours(0, 0, 0);
+        setCurrentTime(newDate);
+        return;
+      }
+      
+      const [hours, minutes, seconds] = time24.split(':').map(Number);
+      const newDate = new Date(currentTime);
+      newDate.setHours(hours, minutes, seconds);
+      setCurrentTime(newDate);
+      setManualTime(newTime);
+    } catch (error) {
+      setManualTime(defaultTime);
+      const newDate = new Date(currentTime);
+      newDate.setHours(0, 0, 0);
+      setCurrentTime(newDate);
+    }
+  };
+
+  // Handle birth time changes
+  const handleBirthTimeChange = (newTime: string) => {
+    try {
+      const time24 = convertTo24Hour(newTime);
+      if (!time24) {
+        setBirthTime(defaultTime);
+        return;
+      }
+      
+      const [hours, minutes, seconds] = time24.split(':').map(Number);
+      setBirthTime(newTime);
+      
+      if (birthDate) {
+        const newDate = new Date(birthDate);
+        newDate.setHours(hours, minutes, seconds);
+        setBirthDate(newDate);
+      }
+    } catch (error) {
+      setBirthTime(defaultTime);
+    }
+  };
+
+  // Handle birth date selection with time
+  const handleBirthDateSelect = (date: Date | undefined) => {
+    if (date) {
+      const time24 = convertTo24Hour(birthTime);
+      if (!time24) {
+        setBirthTime(defaultTime);
+        setBirthDate(date);
+        return;
+      }
+      
+      const [hours, minutes, seconds] = time24.split(':').map(Number);
+      const newDate = new Date(date);
+      newDate.setHours(hours, minutes, seconds);
+      setBirthDate(newDate);
+    } else {
+      setBirthDate(undefined);
+    }
+  };
+
+  // Handle current date selection
+  const handleCurrentDateSelect = (date: Date | undefined) => {
+    if (date) {
+      const time24 = convertTo24Hour(manualTime);
+      if (!time24) {
+        setManualTime(defaultTime);
+        const newDate = new Date(date);
+        newDate.setHours(0, 0, 0);
+        setCurrentTime(newDate);
+        return;
+      }
+      
+      const [hours, minutes, seconds] = time24.split(':').map(Number);
+      const newDate = new Date(date);
+      newDate.setHours(hours, minutes, seconds);
+      setCurrentTime(newDate);
+    }
+  };
+
+  // Ensure birthDate is not in the future
+  const safeBirthDate = birthDate && birthDate <= currentTime ? birthDate : undefined;
+
+  // Calculate age breakdown using safeBirthDate
+  const ageYears = safeBirthDate ? differenceInYears(currentTime, safeBirthDate) : 0;
+  const birthdayThisYear = safeBirthDate ? addYears(safeBirthDate, ageYears) : undefined;
+  const ageMonths = safeBirthDate && birthdayThisYear ? differenceInMonths(currentTime, birthdayThisYear) : 0;
+  const birthdayThisMonth = safeBirthDate && birthdayThisYear ? addMonths(birthdayThisYear, ageMonths) : undefined;
+  const ageDays = safeBirthDate && birthdayThisMonth ? differenceInDays(currentTime, birthdayThisMonth) : 0;
+  
+  // Calculate next birthday based on whether this year's birthday has passed
+  const nextBirthday = safeBirthDate && birthdayThisYear
+    ? currentTime < birthdayThisYear
+      ? birthdayThisYear
+      : addYears(birthdayThisYear, 1)
     : undefined;
-  const ageDays = birthDate && adjustedMonthDate
-    ? differenceInDays(currentTime, adjustedMonthDate)
-    : 0;
-
-  // Calculate next birthday
-  const nextBirthday = birthDate
-    ? addYears(birthDate, ageYears + (isSameDay(birthDate, currentTime) ? 1 : 0))
-    : undefined;
-  const daysToNextBirthday = nextBirthday
-    ? differenceInCalendarDays(nextBirthday, currentTime)
-    : 0;
-
-  // Age in hours, minutes, and seconds
-  const ageHours = birthDate
-    ? differenceInHours(currentTime, birthDate)
-    : 0;
-  const ageMinutes = birthDate
-    ? differenceInMinutes(currentTime, birthDate)
-    : 0;
-  const ageSeconds = birthDate
-    ? differenceInSeconds(currentTime, birthDate)
-    : 0;
+  const daysToNextBirthday = nextBirthday ? differenceInCalendarDays(nextBirthday, currentTime) : 0;
+  
+  // Age in hours, minutes, and seconds based on safeBirthDate
+  const ageHours = safeBirthDate ? differenceInHours(currentTime, safeBirthDate) : 0;
+  const ageMinutes = safeBirthDate ? differenceInMinutes(currentTime, safeBirthDate) : 0;
+  const ageSeconds = safeBirthDate ? differenceInSeconds(currentTime, safeBirthDate) : 0;
 
   return (
     <MorphingDialog
@@ -138,7 +307,7 @@ export function AgeCalculator() {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {birthDate
-                        ? format(birthDate, "PPP")
+                        ? `${format(birthDate, "PPP")} ${birthTime}`
                         : <span>Pick a date</span>}
                     </Button>
                   </PopoverTrigger>
@@ -147,52 +316,87 @@ export function AgeCalculator() {
                       mode="single"
                       required={true}
                       selected={birthDate}
-                      onSelect={setBirthDate}
+                      onSelect={handleBirthDateSelect}
+                      showTimePicker={true}
+                      defaultTime={birthTime}
+                      onTimeChange={handleBirthTimeChange}
+                      disabled={isDateDisabled}
+                      className="[&_.rdp-day_button[aria-disabled=true]]:line-through [&_.rdp-day_button[aria-disabled=true]]:opacity-50"
                       autoFocus
                     />
                   </PopoverContent>
                 </Popover>
               </div>
 
-              {/* Today Date Picker */}
+              {/* Today Date Display */}
               <div className="flex items-center justify-between w-full">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
-                  Today
-                </label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-[300px] justify-start text-left font-normal"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {todayDate
-                        ? format(todayDate, "PPP")
-                        : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      required={true}
-                      selected={todayDate}
-                      onSelect={setTodayDate}
-                      autoFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <div className="flex items-center gap-2">
+                  <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+                    Today
+                  </label>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6"
+                    onClick={() => setIsRealtime(!isRealtime)}
+                  >
+                    {isRealtime ? (
+                      <LockIcon className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <UnlockIcon className="h-4 w-4 text-gray-400" />
+                    )}
+                  </Button>
+                </div>
+                {isRealtime ? (
+                  <Button
+                    variant="outline"
+                    className="w-[300px] justify-start text-left font-normal group relative"
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    <span className="flex items-center gap-2">
+                      <span>{format(currentTime, "MMM d")} {format(currentTime, "hh:mm:ss aa")}</span>
+                    </span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground opacity-70">
+                      Current Time
+                    </span>
+                  </Button>
+                ) : (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-[300px] justify-start text-left font-normal"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {format(currentTime, "PPP")} {manualTime}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={currentTime}
+                        onSelect={handleCurrentDateSelect}
+                        showTimePicker={true}
+                        defaultTime={manualTime}
+                        onTimeChange={handleManualTimeChange}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                )}
               </div>
 
               <div className="mt-2 mb-3 grid w-full gap-2 grid-cols-2">
                 {/* Age Section */}
                 <div className="bg-neutral-950 dark:bg-neutral-900 rounded-l-3xl rounded-r-md p-6 text-center flex flex-col justify-between">
                   <p className="text-3xl font-medium text-gray-50">Age</p>
-                  <p className="mt-4 text-6xl font-bold text-amber-400">
-                    {birthDate ? ageYears : ' '}
+                  <div className="mt-4">
+                    <AuroraText className="text-6xl font-bold">
+                      {birthDate ? ageYears : ' '}
+                    </AuroraText>
                     <span className="text-sm font-normal text-gray-50">
                       {birthDate ? " years" : " years"}
                     </span>
-                  </p>
+                  </div>
                   <p className="mt-6 text-sm text-gray-400">
                     {birthDate ? `${ageMonths} months | ${ageDays} days` : 'months | days'}
                   </p>
@@ -200,9 +404,9 @@ export function AgeCalculator() {
 
                 {/* Next Birthday Section */}
                 <div className="bg-neutral-950 dark:bg-neutral-900 rounded-r-3xl rounded-l-md p-6 text-center flex flex-col justify-between">
-                  <p className="text-lg font-medium text-amber-400">Next Birthday</p>
+                  <AuroraText className="w-full justify-center text-lg font-medium">Next Birthday</AuroraText>
                   <div className="flex flex-col items-center mt-4">
-                    <CakeIcon className="text-amber-400 w-7 h-7 mb-2" />
+                    <CakeIcon className="w-7 h-7 mb-2" />
                     <p className="text-2xl font-bold text-gray-50">
                       {nextBirthday ? `${format(nextBirthday, "EEEE")}` : '--'}
                     </p>
@@ -224,29 +428,29 @@ export function AgeCalculator() {
                         <div className="grid grid-cols-3 gap-y-4 text-center">
                           <div>
                             <p className="text-lg text-gray-50">Years</p>
-                            <p className="text-sm font-bold text-amber-400">{ageYears}</p>
+                            <AuroraText className="text-sm font-bold">{ageYears}</AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Months</p>
-                            <p className="text-sm font-bold text-amber-400">{ageYears * 12 + ageMonths}</p>
+                            <AuroraText className="text-sm font-bold">{ageYears * 12 + ageMonths}</AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Weeks</p>
-                            <p className="text-sm font-bold text-amber-400">
+                            <AuroraText className="text-sm font-bold">
                               {Math.floor((ageYears * 365.25 + ageMonths * 30.44 + ageDays) / 7)}
-                            </p>
+                            </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Hours</p>
-                            <p className="text-sm font-bold text-amber-400">{ageHours}</p>
+                            <AuroraText className="text-sm font-bold">{ageHours}</AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Minutes</p>
-                            <p className="text-sm font-bold text-amber-400">{ageMinutes}</p>
+                            <AuroraText className="text-sm font-bold">{ageMinutes}</AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Seconds</p>
-                            <p className="text-sm font-bold text-amber-400">{ageSeconds}</p>
+                            <AuroraText className="text-sm font-bold">{ageSeconds}</AuroraText>
                           </div>
                         </div>
                       </div>

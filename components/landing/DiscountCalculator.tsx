@@ -14,6 +14,7 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon } from 'lucide-react';
+import { AuroraText } from "@/components/ui/aurora-text"
 
 export function DiscountCalculator() {
   const [originalPrice, setOriginalPrice] = useState<string>("");
@@ -133,13 +134,13 @@ export function DiscountCalculator() {
 
               {/* Results */}
               <div className={`mt-4 mb-4 flex gap-4 ${shouldWrapResults() ? 'flex-col' : 'flex-row'}`}>
-                <div className={`text-center ${shouldWrapResults() ? 'w-full' : 'flex-1'}`}>
-                  <p className="text-2xl sm:text-3xl font-bold text-amber-400 flex items-center justify-center gap-1">
+              <div className={`text-center ${shouldWrapResults() ? 'w-full' : 'flex-1'}`}>
+                  <AuroraText className="text-2xl sm:text-3xl font-bold flex items-center justify-center gap-1">
                     <Coins size={32} className="shrink-0" />
                     <span className="break-words">
                       {finalPrice.toFixed(2)}
                     </span>
-                  </p>
+                  </AuroraText>
                   <p className="pt-2 text-sm font-normal text-gray-50">
                     Final Price
                   </p>

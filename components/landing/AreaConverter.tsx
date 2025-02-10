@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AuroraText } from "@/components/ui/aurora-text"
 
 const units = [
   { name: "Square Kilometers", symbol: "km²" },
@@ -342,9 +343,9 @@ export function AreaCalculator() {
 
               {/* Converted Value */}
               <div className="mt-4 mb-4 text-center">
-                <p className="text-3xl font-bold text-amber-400">
+                <AuroraText className="text-3xl font-bold">
                   {convertedValue} {getUnitSymbol(toUnit)}
-                </p>
+                </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toUnit}
                 </p>

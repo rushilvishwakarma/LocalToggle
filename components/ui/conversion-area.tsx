@@ -549,7 +549,7 @@ export default function Dropzone() {
                   colorTo="var(--color-two)"
                 />
               </div>
-              <div className="py-16 space-y-4 text-foreground relative z-10 text-center">
+              <div className="py-16 space-y-4 text-foreground relative text-center">
                 {is_hover ? (
                   <>
                     <div className="text-balance tracking-tight text-gray-400 justify-center flex text-5xl">

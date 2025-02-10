@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"
+import { AuroraText } from "@/components/ui/aurora-text";
 
 const systems = [
   { name: "Binary", base: 2, prefix: "BIN", notation: "0–1" },
@@ -215,9 +216,9 @@ export function NumeralSystemConverter() {
               </div>
 
               <div className="mt-4 mb-4 text-center">
-                <p className="text-3xl font-bold text-amber-400">
+                <AuroraText className="text-3xl font-bold">
                   {convertedValue}
-                </p>
+                </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toSystem} ({systems.find(s => s.name === toSystem)?.prefix})
                 </p>

@@ -26,15 +26,26 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon } from 'lucide-react';
+import { AuroraText } from "@/components/ui/aurora-text";
 
 export function DateCalculator() {
-  const [fromDate, setFromDate] = useState<Date>();
-  const [toDate, setToDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [time, setTime] = useState<string>("12:00:00");
+
+  const handleTimeChange = (newTime: string) => {
+    setTime(newTime);
+    if (date) {
+      const [hours, minutes, seconds] = newTime.split(':').map(Number);
+      const newDate = new Date(date);
+      newDate.setHours(hours, minutes, seconds);
+      setDate(newDate);
+    }
+  };
 
   // Calculate differences
-  const yearsDiff = fromDate && toDate ? differenceInYears(toDate, fromDate) : 0;
-  const monthsDiff = fromDate && toDate ? differenceInMonths(toDate, fromDate) % 12 : 0;
-  const daysDiff = fromDate && toDate ? differenceInDays(toDate, fromDate) % 30 : 0;
+  const yearsDiff = date && new Date(date) ? differenceInYears(new Date(date), date) : 0;
+  const monthsDiff = date && new Date(date) ? differenceInMonths(new Date(date), date) % 12 : 0;
+  const daysDiff = date && new Date(date) ? differenceInDays(new Date(date), date) % 30 : 0;
 
   return (
     <MorphingDialog
@@ -88,52 +99,18 @@ export function DateCalculator() {
                         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-2">
                 <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
-                  From Date
+                  Date
                 </label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {fromDate ? format(fromDate, "PPP") : <span>Select start date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={fromDate}
-                      onSelect={setFromDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
-                  To Date
-                </label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {toDate ? format(toDate, "PPP") : <span>Select end date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={toDate}
-                      onSelect={setToDate}
-                      required={true}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <div className="rounded-lg border border-border">
+                  <Calendar 
+                    mode="single" 
+                    selected={date} 
+                    onSelect={setDate} 
+                    showTimePicker={true}
+                    defaultTime={time}
+                    onTimeChange={handleTimeChange}
+                  />
+                </div>
               </div>
             </div>
 
@@ -142,15 +119,15 @@ export function DateCalculator() {
             <div className="mt-6 grid grid-cols-3 gap-1.5 pb-4">
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-l-3xl rounded-r-md p-4 text-center">
                 <p className="text-lg text-gray-50">Years</p>
-                <p className="text-3xl font-bold text-amber-400 mt-2">{yearsDiff}</p>
+                <AuroraText className="text-3xl font-bold mt-2">{yearsDiff}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-md p-4 text-center">
                 <p className="text-lg text-gray-50">Months</p>
-                <p className="text-3xl font-bold text-amber-400 mt-2">{monthsDiff}</p>
+                <AuroraText className="text-3xl font-bold mt-2">{monthsDiff}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-r-3xl rounded-l-md p-4 text-center">
                 <p className="text-lg text-gray-50">Days</p>
-                <p className="text-3xl font-bold text-amber-400 mt-2">{daysDiff}</p>
+                <AuroraText className="text-3xl font-bold mt-2">{daysDiff}</AuroraText>
               </div>
             </div>
 

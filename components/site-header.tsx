@@ -18,7 +18,7 @@ export function SiteHeader() {
 
    const tabsConfig: TabsConfig = useMemo(() => ({
       account: { path: '/', label: 'File Conversion' },
-      password: { path: '/calculations', label: 'Unit Conversions' },
+      password: { path: '/calculations', label: 'Calculate' },
    }), [])
 
    const handleTabChange = (value: string) => {
@@ -34,12 +34,12 @@ export function SiteHeader() {
    }, [pathname, tabsConfig]) // tabsConfig is now stable due to useMemo
 
    return (
-      <header className="fixed left-1/2 top-4 z-10 w-[95%] max-w-5xl bg-background/15 -translate-x-1/2 rounded-2xl border px-5 py-2 shadow-xl backdrop-blur-lg">
+      <header className="fixed left-1/2 top-4 z-20 w-[95%] max-w-5xl bg-background/15 -translate-x-1/2 rounded-2xl border px-5 py-2 shadow-xl backdrop-blur-lg">
          <div className="flex items-center justify-center md:justify-between h-8">
             <Link className="text-sm font-semibold hidden md:block" href="/">
                                     <Image
                                        src="/orange-slice-white.svg"
-                                       alt="Lemon Convert"
+                                       alt="Tangerine Convert"
                                        className="text-primary size-8"
                                        width={40}
                                        height={40}

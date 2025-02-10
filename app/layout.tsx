@@ -10,7 +10,7 @@ const fontSans = FontSans({
    variable: '--font-sans',
 })
 export const metadata: Metadata = {
-   title: 'Lemon Convert',
+   title: 'Tangerine Convert',
    description: 'Locally convert between different files formats, units and measurements.',
 }
 

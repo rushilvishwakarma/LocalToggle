@@ -14,6 +14,7 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
+import { AuroraText } from "@/components/ui/aurora-text";
 
 const speedUnits = [
   { name: "Light Speed", symbol: "c", factor: 299792458 },
@@ -215,9 +216,9 @@ export function SpeedConverter() {
               </div>
 
               <div className="mt-4 mb-4 text-center">
-                <p className="text-3xl font-bold text-amber-400">
+                <AuroraText className="text-3xl font-bold">
                   {convertedValue} {toUnit}
-                </p>
+                </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {speedUnits.find(u => u.symbol === toUnit)?.name}
                 </p>
