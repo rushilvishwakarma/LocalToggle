@@ -21,6 +21,12 @@ export default function RootLayout({
 }>) {
    return (
       <html lang="en" suppressHydrationWarning>
+         <head>
+            <link rel="manifest" href="/manifest.json" />
+            <meta name="theme-color" content="#000000" />
+            <meta name="description" content="A tool for local file conversion" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+         </head>
          <body
             className={cn(
                'bg-background min-h-screen font-sans antialiased',

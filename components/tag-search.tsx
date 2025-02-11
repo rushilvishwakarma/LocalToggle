@@ -323,30 +323,22 @@ const suggestions: Suggestion[] = [
 // Update convertToLatex function
 const convertToLatex = (formula: string): string => {
   return formatArithmeticResult(formula)
-    // Fix integral notation
-    .replace(/∫\s*\((.*?)\)\s*dx/g, '\\int ($1)\\,dx') // Integral with parentheses
-    .replace(/∫\s*(.*?)\s*dx/g, '\\int $1\\,dx')      // Regular integral
-    // Fix exponents and subscripts
-    .replace(/(\d+|[a-z])(\d+)/g, '$1^{$2}')          // Convert a2 to a^{2}
-    .replace(/\^(\d+)/g, '^{$1}')
-    .replace(/\_(\d+)/g, '_{$1}')
+    // Fix integral notation first
+    .replace(/∫\s*\((.*?)\)\s*dx/g, '\\int($1)\\dx') // Integral with parentheses
+    .replace(/∫\s*(.*?)\s*dx/g, '\\int $1\\dx')      // Regular integral
+    // Fix superscripts in integrals
+    .replace(/([a-z])(\d+)/g, '{$1}^{$2}')           // Convert ax2 to a^{2}
+    .replace(/\b(\d+)\b/g, '{$1}')                   // Wrap numbers in {}
     // Fix fractions
     .replace(/\(([^/]+)\/([^)]+)\)/g, '\\frac{$1}{$2}')
-    .replace(/([^/\s]+)\/([^/\s]+)/g, '\\frac{$1}{$2}')
+    .replace(/(\d+)\/(\d+)/g, '\\frac{$1}{$2}')
     // Other mathematical symbols
-    .replace(/×/g, '\\times')
-    .replace(/\*/g, '\\times')
+    .replace(/\*/g, '\\cdot')
     .replace(/±/g, '\\pm')
     .replace(/→/g, '\\rightarrow')
     .replace(/π/g, '\\pi')
-    .replace(/σ/g, '\\sigma')
-    .replace(/θ/g, '\\theta')
-    .replace(/∑/g, '\\sum')
-    .replace(/∞/g, '\\infty')
-    .replace(/…/g, '\\cdots')
-    .replace(/\.\.\./g, '\\cdots')
-    // Add proper spacing
-    .replace(/=/g, ' = ')
+    // Clean up spaces
+    .replace(/\s*=\s*/g, ' = ')
     .replace(/\s+/g, ' ')
     .trim();
 };

@@ -1,0 +1,17 @@
+{
+  "name": "Local Toggle",
+  "short_name": "LocalToggle",
+  "description": "A tool for local file conversion",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/orange-slice-white.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
