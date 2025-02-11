@@ -135,7 +135,7 @@ export function AgeCalculator() {
       newDate.setHours(0, 0, 0);
       setCurrentTime(newDate);
     }
-  }, [isRealtime]);
+  }, [isRealtime, currentTime]);
 
   // Handle manual time changes
   const handleManualTimeChange = (newTime: string) => {

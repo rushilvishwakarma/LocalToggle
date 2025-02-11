@@ -7,7 +7,7 @@ import { TbDragDrop2 } from "react-icons/tb";
 import ReactDropzone from "react-dropzone";
 import bytesToSize from "@/utils/bytes-to-size";
 import fileToIcon from "@/utils/file-to-icon";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import compressFileName from "@/utils/compress-file-name";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -223,13 +223,13 @@ export default function Dropzone() {
   };
   
 
-  const checkIsReady = (): void => {
+  const checkIsReady = useCallback((): void => {
     let tmp_is_ready = true;
     actions.forEach((action: Action) => {
       if (!action.to) tmp_is_ready = false;
     });
     setIsReady(tmp_is_ready);
-  };
+  }, [actions]);
 
   const deleteAction = (action: Action): void => {
     setActions(actions.filter((elt) => elt !== action));
@@ -243,7 +243,7 @@ export default function Dropzone() {
       setIsReady(false);
       setIsConverting(false);
     } else checkIsReady();
-  }, [actions]);
+  }, [actions, checkIsReady]);
 
   useEffect(() => {
     load();
