@@ -123,19 +123,18 @@ export function AgeCalculator() {
   useEffect(() => {
     if (isRealtime) {
       const timer = setInterval(() => {
-        const now = new Date();
-        setCurrentTime(now);
+        setCurrentTime(new Date());
       }, 1000);
 
       return () => clearInterval(timer);
     } else {
       // When switching to manual mode, reset time to 12 AM
-      setManualTime(defaultTime);
-      const newDate = new Date(currentTime);
+      const newDate = new Date();
       newDate.setHours(0, 0, 0);
+      setManualTime(defaultTime);
       setCurrentTime(newDate);
     }
-  }, [isRealtime, currentTime]);
+  }, [isRealtime, defaultTime]); // Remove currentTime from dependencies
 
   // Handle manual time changes
   const handleManualTimeChange = (newTime: string) => {
@@ -307,7 +306,7 @@ export function AgeCalculator() {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
                       {birthDate
-                        ? `${format(birthDate, "PPP")} ${birthTime}`
+                        ? `${format(birthDate, "PPP")}`
                         : <span>Pick a date</span>}
                     </Button>
                   </PopoverTrigger>
