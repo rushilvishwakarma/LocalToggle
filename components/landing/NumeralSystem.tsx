@@ -208,7 +208,8 @@ export function NumeralSystemConverter() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="Enter number"  // Changed from "0" to descriptive placeholder
+                  inputMode="numeric"
+                  placeholder="Enter number"
                   value={inputValue}
                   onChange={handleInputChange}
                   className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"

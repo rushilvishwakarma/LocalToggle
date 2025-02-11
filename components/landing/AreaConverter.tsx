@@ -334,6 +334,7 @@ export function AreaCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter area"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}

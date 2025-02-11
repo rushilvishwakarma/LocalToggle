@@ -208,6 +208,7 @@ export function SpeedConverter() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter speed"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}

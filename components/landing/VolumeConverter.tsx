@@ -277,6 +277,7 @@ export function VolumeCalculator() {  // Changed from MassCalculator
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter volume"
                   value={inputValue}
                   onChange={handleInputChange}

@@ -224,7 +224,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen pt-6 pb-2 relative mx-auto mt-16 max-w-5xl px-6 text-center md:px-8">
+    <section className="min-h-screen pt-6 pb-2 relative mx-auto mt-14 max-w-5xl px-6 text-center md:px-8">
       <div className="mb-3 mx-auto">
         <TagSearch 
           onSearch={handleSearch}

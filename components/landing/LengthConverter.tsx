@@ -304,6 +304,7 @@ export function LengthCalculator() {  // Changed component name
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter length"
                   value={inputValue}
                   onChange={handleInputChange}

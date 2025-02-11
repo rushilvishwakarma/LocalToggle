@@ -150,6 +150,7 @@ export function BMICalculator() {
                   <div className="flex gap-2">
                     <Input
                       type="text"
+                      inputMode="numeric"
                       placeholder="Enter weight"
                       value={weightValue}
                       onChange={handleWeightChange}
@@ -195,6 +196,7 @@ export function BMICalculator() {
                   <div className="flex gap-2">
                     <Input
                       type="text"
+                      inputMode="numeric"
                       placeholder="Enter height"
                       value={heightValue}
                       onChange={handleHeightChange}

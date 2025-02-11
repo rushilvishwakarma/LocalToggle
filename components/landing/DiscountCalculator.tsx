@@ -111,6 +111,7 @@ export function DiscountCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter price"
                   value={originalPrice}
                   onChange={handlePriceChange}
@@ -125,6 +126,7 @@ export function DiscountCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter discount percentage"
                   value={discountPercent}
                   onChange={handleDiscountChange}

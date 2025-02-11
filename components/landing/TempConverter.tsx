@@ -241,6 +241,7 @@ export function TempCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter temperature"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}

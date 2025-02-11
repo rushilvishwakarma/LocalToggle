@@ -236,6 +236,7 @@ export function DataCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter value"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}

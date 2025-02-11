@@ -269,7 +269,8 @@ export function TimeConverter() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="Enter value"  // Added meaningful placeholder
+                  inputMode="numeric"
+                  placeholder="Enter time value"
                   value={inputValue}
                   onChange={handleInputChange}
                   className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"

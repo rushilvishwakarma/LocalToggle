@@ -293,6 +293,7 @@ export function MassCalculator() {
                 </label>
                 <Input
                   type="text"
+                  inputMode="numeric"
                   placeholder="Enter mass"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}
