@@ -13,7 +13,7 @@ import { NumeralSystemConverter } from '@/components/landing/NumeralSystem';
 import { SpeedConverter } from '@/components/landing/SpeedConverter';
 import { VolumeCalculator } from '@/components/landing/VolumeConverter';
 import { TimeConverter } from '@/components/landing/TimeConverter';
-import TagSearch from '@/components/tag-search';
+import TagSearch from '@/components/smart-search';
 import { useState } from 'react';
 import { Option } from '@/components/ui/multiselect';
 
