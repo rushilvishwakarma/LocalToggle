@@ -66,6 +66,51 @@ const unitMappings = {
   'miles per hour': 'SpeedConverter'
 } as const;
 
+// Add unit variations mapping
+const unitAliases = {
+  // Time
+  's': 'seconds',
+  'sec': 'seconds',
+  'second': 'seconds',
+  'm': 'minutes',
+  'min': 'minutes',
+  'minute': 'minutes',
+  'h': 'hours',
+  'hr': 'hours',
+  'hour': 'hours',
+  'd': 'days',
+  'day': 'days',
+  
+  // Temperature
+  'c': 'celsius',
+  'fahrenheit': 'fahrenheit',
+  'f': 'fahrenheit',
+  'fah': 'fahrenheit',
+  'k': 'kelvin',
+  
+  // Length
+  'meter': 'meters',
+  'km': 'kilometers',
+  'cm': 'centimeters',
+  'mm': 'millimeters',
+  'ft': 'feet',
+  'in': 'inches',
+  'mi': 'miles',
+  
+  // Mass
+  'kg': 'kilograms',
+  'g': 'grams',
+  'lb': 'pounds',
+  'lbs': 'pounds',
+  'oz': 'ounces',
+  
+  // Data
+  'kb': 'kilobytes',
+  'mb': 'megabytes',
+  'gb': 'gigabytes',
+  'tb': 'terabytes',
+} as const;
+
 // Create formatted options for the MultipleSelector
 const createTagOptions = () => {
   const options: Option[] = [];
@@ -138,17 +183,32 @@ export default function HeroSection() {
   const handleQueryChange = (query: string) => {
     setSearchQuery(query);
     
-    // Check if the query contains any known units
-    const lowercaseQuery = query.toLowerCase();
-    const matchedUnit = Object.keys(unitMappings).find(unit => 
-      lowercaseQuery.includes(unit.toLowerCase())
-    );
-
-    if (matchedUnit) {
-      setActiveComponent(unitMappings[matchedUnit as keyof typeof unitMappings]);
-    } else {
+    if (!query) {
       setActiveComponent(null);
+      return;
     }
+
+    // Normalize the query and split into words
+    const queryWords = query.toLowerCase().split(/\s+/);
+    
+    // Check each word against unit aliases and original units
+    for (const word of queryWords) {
+      // Check aliases first
+      const canonicalUnit = unitAliases[word as keyof typeof unitAliases];
+      if (canonicalUnit && unitMappings[canonicalUnit as keyof typeof unitMappings]) {
+        setActiveComponent(unitMappings[canonicalUnit as keyof typeof unitMappings]);
+        return;
+      }
+      
+      // Check direct unit matches
+      if (unitMappings[word as keyof typeof unitMappings]) {
+        setActiveComponent(unitMappings[word as keyof typeof unitMappings]);
+        return;
+      }
+    }
+
+    // If no unit match found, clear active component
+    setActiveComponent(null);
   };
 
   const handleSearch = (query: string) => {
@@ -165,7 +225,7 @@ export default function HeroSection() {
 
   return (
     <section className="min-h-screen pt-6 pb-2 relative mx-auto mt-16 max-w-5xl px-6 text-center md:px-8">
-      <div className="mb-8 max-w-md mx-auto">
+      <div className="mb-3 mx-auto">
         <TagSearch 
           onSearch={handleSearch}
           onQueryChange={handleQueryChange}

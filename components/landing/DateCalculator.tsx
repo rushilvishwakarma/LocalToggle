@@ -1,51 +1,27 @@
 'use client'
 
 import React, { useState } from "react";
-import {
-  format,
-  differenceInYears,
-  differenceInMonths,
-  differenceInDays,
-} from "date-fns";
-import { CakeIcon } from "lucide-react";;
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import {
-  MorphingDialog,
-  MorphingDialogTrigger,
-  MorphingDialogContent,
-  MorphingDialogTitle,
-  MorphingDialogClose,
-  MorphingDialogContainer,
-} from '@/components/ui/morphing-dialog';
-import { PlusIcon } from 'lucide-react';
+import { format, differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
+import { CalendarDate, parseDate } from "@internationalized/date";
+import { CakeIcon, CalendarIcon, PlusIcon } from "lucide-react";
+import { DateRangePicker, Group, Dialog, Button, Popover, Label } from "react-aria-components";
+import { RangeCalendar } from "@/components/ui/calendar-rac";
+import { DateInput, dateInputStyle } from "@/components/ui/datefield-rac";
+import { MorphingDialog, MorphingDialogTrigger, MorphingDialogContent, MorphingDialogTitle, MorphingDialogClose, MorphingDialogContainer } from '@/components/ui/morphing-dialog';
 import { AuroraText } from "@/components/ui/aurora-text";
+import { cn } from "@/lib/utils";
 
 export function DateCalculator() {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [time, setTime] = useState<string>("12:00:00");
+  const [fromDate, setFromDate] = useState<CalendarDate>(parseDate(format(new Date(), 'yyyy-MM-dd')));
+  const [toDate, setToDate] = useState<CalendarDate>(parseDate(format(new Date(), 'yyyy-MM-dd')));
 
-  const handleTimeChange = (newTime: string) => {
-    setTime(newTime);
-    if (date) {
-      const [hours, minutes, seconds] = newTime.split(':').map(Number);
-      const newDate = new Date(date);
-      newDate.setHours(hours, minutes, seconds);
-      setDate(newDate);
-    }
-  };
+  // Calculate differences using the native Date objects
+  const fromNativeDate = fromDate ? new Date(fromDate.year, fromDate.month - 1, fromDate.day) : new Date();
+  const toNativeDate = toDate ? new Date(toDate.year, toDate.month - 1, toDate.day) : new Date();
 
-  // Calculate differences
-  const yearsDiff = date && new Date(date) ? differenceInYears(new Date(date), date) : 0;
-  const monthsDiff = date && new Date(date) ? differenceInMonths(new Date(date), date) % 12 : 0;
-  const daysDiff = date && new Date(date) ? differenceInDays(new Date(date), date) % 30 : 0;
+  const yearsDiff = differenceInYears(toNativeDate, fromNativeDate);
+  const monthsDiff = differenceInMonths(toNativeDate, fromNativeDate) % 12;
+  const daysDiff = differenceInDays(toNativeDate, fromNativeDate) % 30;
 
   return (
     <MorphingDialog
@@ -88,52 +64,57 @@ export function DateCalculator() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[600px]"
         >
-          <div className="px-6 pt-6 pb-3">
-            <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
+          <div className="flex flex-col p-6">
+            <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50 mb-6">
               Date Calculator
             </MorphingDialogTitle>
+            <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+              Date Range (From - To)
+            </label>
             
-                        {/* Date inputs responsive layout */}
-                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
-                  Date
-                </label>
-                <div className="rounded-lg border border-border">
-                  <Calendar 
-                    mode="single" 
-                    selected={date} 
-                    onSelect={setDate} 
-                    showTimePicker={true}
-                    defaultTime={time}
-                    onTimeChange={handleTimeChange}
-                  />
-                </div>
+            {/* Date Range Picker */}
+            <DateRangePicker className="space-y-2 mb-6 mt-2">
+              <div className="flex">
+                <Group className={cn(dateInputStyle, "pe-9")}>
+                  <DateInput slot="start" unstyled />
+                  <span aria-hidden="true" className="px-2 text-muted-foreground/70">
+                    -
+                  </span>
+                  <DateInput slot="end" unstyled />
+                </Group>
+                <Button className="z-10 -me-px -ms-9 flex w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus-visible:outline-none data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70">
+                  <CalendarIcon size={16} strokeWidth={2} />
+                </Button>
+              </div>
+              <Popover
+                className="z-50 rounded-lg border border-border bg-background text-popover-foreground shadow-lg shadow-black/5 outline-none data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2"
+                offset={4}
+              >
+                <Dialog className="max-h-[inherit] overflow-auto p-2">
+                  <RangeCalendar />
+                </Dialog>
+              </Popover>
+            </DateRangePicker>
+
+            {/* Results section */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
+                <p className="text-sm font-medium text-gray-400 mb-1">Years</p>
+                <AuroraText className="text-3xl font-bold">{yearsDiff}</AuroraText>
+              </div>
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
+                <p className="text-sm font-medium text-gray-400 mb-1">Months</p>
+                <AuroraText className="text-3xl font-bold">{monthsDiff}</AuroraText>
+              </div>
+              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
+                <p className="text-sm font-medium text-gray-400 mb-1">Days</p>
+                <AuroraText className="text-3xl font-bold">{daysDiff}</AuroraText>
               </div>
             </div>
-
-
-            {/* Three containers for Year, Month, Days */}
-            <div className="mt-6 grid grid-cols-3 gap-1.5 pb-4">
-              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-l-3xl rounded-r-md p-4 text-center">
-                <p className="text-lg text-gray-50">Years</p>
-                <AuroraText className="text-3xl font-bold mt-2">{yearsDiff}</AuroraText>
-              </div>
-              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-md p-4 text-center">
-                <p className="text-lg text-gray-50">Months</p>
-                <AuroraText className="text-3xl font-bold mt-2">{monthsDiff}</AuroraText>
-              </div>
-              <div className="bg-neutral-950 dark:bg-neutral-900 rounded-r-3xl rounded-l-md p-4 text-center">
-                <p className="text-lg text-gray-50">Days</p>
-                <AuroraText className="text-3xl font-bold mt-2">{daysDiff}</AuroraText>
-              </div>
-            </div>
-
-
           </div>
-          <MorphingDialogClose className="text-gray-50" />
+          <MorphingDialogClose className="absolute top-6 right-6 text-gray-400 hover:text-gray-50" />
         </MorphingDialogContent>
       </MorphingDialogContainer>
     </MorphingDialog>

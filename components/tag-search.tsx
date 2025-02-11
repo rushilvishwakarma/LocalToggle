@@ -3,6 +3,10 @@ import { Search, X, Loader2 } from "lucide-react";
 import { useState, useId, useEffect } from "react";
 import { processQuery } from "@/utils/gemini";
 import { ButtonColorful } from "@/components/ui/button-colorful";
+import { AuroraText } from "@/components/ui/aurora-text"
+import { LatexAurora } from "@/components/ui/latex-aurora";
+import { cn } from "@/lib/utils";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface TagSearchProps {
   onSearch: (query: string) => void;
@@ -16,23 +20,63 @@ interface TagSearchProps {
 const mathOperators = ['+', '-', '*', '/', '(', ')', '^', '%', '=', '√', '∛', '∜', '≤', '≥', '≠', '∈', '∉', '⊂', '⊃', '∪', '∩', '→'];
 const validUnits = [
   // Time
-  'seconds', 'minutes', 'hours', 'days',
+  'seconds', 'second', 'sec', 's',
+  'minutes', 'minute', 'min', 'm',
+  'hours', 'hour', 'hr', 'h',
+  'days', 'day', 'd',
+  
   // Temperature
-  'celsius', 'fahrenheit', 'kelvin',
+  'celsius', 'centigrade', 'c',
+  'fahrenheit', 'fah', 'f',
+  'kelvin', 'k',
+  
   // Length
-  'meters', 'feet', 'inches', 'kilometers',
+  'meters', 'meter', 'm',
+  'feet', 'foot', 'ft',
+  'inches', 'inch', 'in',
+  'kilometers', 'kilometer', 'km',
+  'centimeters', 'centimeter', 'cm',
+  'millimeters', 'millimeter', 'mm',
+  'miles', 'mile', 'mi',
+  
   // Mass
-  'kilograms', 'pounds',
+  'kilograms', 'kilogram', 'kg',
+  'pounds', 'pound', 'lb', 'lbs',
+  'grams', 'gram', 'g',
+  'ounces', 'ounce', 'oz',
+  
   // Data
-  'bytes', 'kilobytes', 'megabytes',
+  'bytes', 'byte', 'B',
+  'kilobytes', 'kilobyte', 'kb', 'KB',
+  'megabytes', 'megabyte', 'mb', 'MB',
+  'gigabytes', 'gigabyte', 'gb', 'GB',
+  'terabytes', 'terabyte', 'tb', 'TB',
+  
   // Area
-  'square meters', 'square feet',
+  'square meters', 'square meter', 'm²', 'm2',
+  'square feet', 'square foot', 'ft²', 'ft2',
+  'acres', 'acre', 'ac',
+  'hectares', 'hectare', 'ha',
+  
   // Volume
-  'liters', 'gallons',
+  'liters', 'liter', 'l', 'L',
+  'gallons', 'gallon', 'gal',
+  'cubic meters', 'cubic meter', 'm³', 'm3',
+  'milliliters', 'milliliter', 'ml', 'mL',
+  
   // Speed
-  'meters per second', 'kilometers per hour', 'miles per hour',
+  'meters per second', 'm/s', 'mps',
+  'kilometers per hour', 'km/h', 'kph',
+  'miles per hour', 'mph',
+  
   // Physics
-  'newtons', 'joules', 'watts', 'volts', 'amperes', 'ohms',
+  'newtons', 'newton', 'N',
+  'joules', 'joule', 'J',
+  'watts', 'watt', 'W',
+  'volts', 'volt', 'V',
+  'amperes', 'ampere', 'amp', 'A',
+  'ohms', 'ohm', 'Ω',
+  
   // Common terms
   'area', 'volume', 'speed', 'velocity', 'acceleration', 'force', 'energy', 'power',
   'radius', 'diameter', 'circumference', 'height', 'width', 'length',
@@ -44,6 +88,42 @@ const validUnits = [
   'values', 'variable', 'constant', 'coefficient', 'term', 'polynomial',
   'quadratic', 'linear', 'exponential', 'logarithmic', 'derivative', 'integral'
 ];
+
+const commonFormulas = {
+  'pythagoras theorem': 'a² + b² = c²',
+  'pythagorean theorem': 'a² + b² = c²',
+  'quadratic formula': 'x = (-b ± √(b² - 4ac)) / 2a',
+  'area of circle': 'A = πr²',
+  'circumference of circle': 'C = 2πr',
+  'area of triangle': 'A = ½bh',
+  'area of rectangle': 'A = l × w',
+  'volume of sphere': 'V = (4/3)πr³',
+  'volume of cylinder': 'V = πr²h',
+  'distance formula': 'd = √((x₂-x₁)² + (y₂-y₁)²)',
+  'slope formula': 'm = (y₂-y₁)/(x₂-x₁)',
+  'density formula': 'ρ = m/V',
+  'force formula': 'F = ma',
+  'ohms law': 'V = IR',
+  'power formula': 'P = VI'
+};
+
+const advancedFormulas = {
+  'taylor series': 'f(x) = f(a) + f^{\\prime}(a)(x-a) + \\frac{f^{\\prime\\prime}(a)}{2!}(x-a)^2 + \\frac{f^{\\prime\\prime\\prime}(a)}{3!}(x-a)^3 + \\cdots',
+  'maclaurin series': 'f(x) = f(0) + f\'(0)x + (f\'\'(0)/2!)x² + (f\'\'\'(0)/3!)x³ + ...',
+  'euler formula': 'e^(iθ) = cos(θ) + i·sin(θ)',
+  'fourier series': 'f(x) = a₀/2 + Σ(aₙcos(nx) + bₙsin(nx))',
+  'binomial theorem': '(x + y)ⁿ = Σᵏ(ⁿCᵏ)xᵏyⁿ⁻ᵏ',
+  'chain rule': 'd/dx[f(g(x))] = f\'(g(x))·g\'(x)',
+  'product rule': 'd/dx[f(x)g(x)] = f\'(x)g(x) + f(x)g\'(x)',
+  'quotient rule': 'd/dx[f(x)/g(x)] = (f\'(x)g(x) - f(x)g\'(x))/[g(x)]²',
+  'integration by parts': '∫u·dv = u·v - ∫v·du',
+  'eigenvalue equation': 'Ax = λx',
+  'schrodinger equation': 'iℏ∂ψ/∂t = -ℏ²/2m ∇²ψ + Vψ',
+  'maxwell equations': '∇·E = ρ/ε₀, ∇·B = 0, ∇×E = -∂B/∂t, ∇×B = μ₀J + μ₀ε₀∂E/∂t',
+  'einstein field equations': 'Gᵤᵥ + Λgᵤᵥ = 8πG/c⁴ Tᵤᵥ',
+  'normal distribution': 'f(x) = (1/σ√(2π))e^(-(x-μ)²/2σ²)',
+  'logarithm rules': 'log(xy) = log(x) + log(y), log(x/y) = log(x) - log(y), log(xⁿ) = n·log(x)'
+};
 
 const filterCategories = [
   { id: 'calculator', label: 'Calculators' },
@@ -78,61 +158,131 @@ const componentTags: Record<string, string[]> = {
   NumeralSystemConverter: ['converter', 'tech', 'programming', 'binary', 'hex', 'decimal', 'octal']
 };
 
+// Create a mapping of unit variations to their canonical form
+const unitVariations = {
+  // Time
+  's': 'seconds',
+  'sec': 'seconds',
+  'second': 'seconds',
+  'seconds': 'seconds',
+  'm': 'minutes',
+  'min': 'minutes',
+  'minute': 'minutes',
+  'minutes': 'minutes',
+  'h': 'hours',
+  'hr': 'hours',
+  'hour': 'hours',
+  'hours': 'hours',
+  'd': 'days',
+  'day': 'days',
+  'days': 'days',
+  
+  // Temperature
+  'c': 'celsius',
+  'celsius': 'celsius',
+  'centigrade': 'celsius',
+  'f': 'fahrenheit',
+  'fah': 'fahrenheit',
+  'fahrenheit': 'fahrenheit',
+  'k': 'kelvin',
+  'kelvin': 'kelvin',
+  
+  // Update other unit variations similarly...
+} as const;
+
 // Define units and their associated components
 const unitMappings = {
-  // Time units
   'seconds': 'TimeConverter',
   'minutes': 'TimeConverter',
   'hours': 'TimeConverter',
   'days': 'TimeConverter',
-  'date': 'DateCalculator',
-  'age': 'AgeCalculator',
-  
-  // Temperature
   'celsius': 'TempCalculator',
   'fahrenheit': 'TempCalculator',
   'kelvin': 'TempCalculator',
-  
-  // Length
   'meters': 'LengthCalculator',
-  'feet': 'LengthCalculator',
-  'inches': 'LengthCalculator',
+  'meter': 'LengthCalculator',
+  'm': 'LengthCalculator',
+  'kilometers': 'LengthCalculator',
+  'kilometer': 'LengthCalculator',
   'km': 'LengthCalculator',
+  'centimeters': 'LengthCalculator',
+  'centimeter': 'LengthCalculator',
+  'cm': 'LengthCalculator',
+  'millimeters': 'LengthCalculator',
+  'millimeter': 'LengthCalculator',
+  'mm': 'LengthCalculator',
   'miles': 'LengthCalculator',
-  
-  // Mass
+  'mile': 'LengthCalculator',
+  'mi': 'LengthCalculator',
   'kilograms': 'MassCalculator',
+  'kilogram': 'MassCalculator',
+  'kg': 'MassCalculator',
   'pounds': 'MassCalculator',
+  'pound': 'MassCalculator',
+  'lb': 'MassCalculator',
+  'lbs': 'MassCalculator',
   'grams': 'MassCalculator',
+  'gram': 'MassCalculator',
+  'g': 'MassCalculator',
   'ounces': 'MassCalculator',
-  
-  // Data
+  'ounce': 'MassCalculator',
+  'oz': 'MassCalculator',
   'bytes': 'DataCalculator',
+  'byte': 'DataCalculator',
+  'B': 'DataCalculator',
+  'kilobytes': 'DataCalculator',
+  'kilobyte': 'DataCalculator',
   'kb': 'DataCalculator',
+  'KB': 'DataCalculator',
+  'megabytes': 'DataCalculator',
+  'megabyte': 'DataCalculator',
   'mb': 'DataCalculator',
+  'MB': 'DataCalculator',
+  'gigabytes': 'DataCalculator',
+  'gigabyte': 'DataCalculator',
   'gb': 'DataCalculator',
-  'binary': 'NumeralSystemConverter',
-  'hex': 'NumeralSystemConverter',
-  'decimal': 'NumeralSystemConverter',
-  'octal': 'NumeralSystemConverter',
-  
-  // Area
+  'GB': 'DataCalculator',
+  'terabytes': 'DataCalculator',
+  'terabyte': 'DataCalculator',
+  'tb': 'DataCalculator',
+  'TB': 'DataCalculator',
   'square meters': 'AreaCalculator',
+  'square meter': 'AreaCalculator',
+  'm²': 'AreaCalculator',
+  'm2': 'AreaCalculator',
   'square feet': 'AreaCalculator',
+  'square foot': 'AreaCalculator',
+  'ft²': 'AreaCalculator',
+  'ft2': 'AreaCalculator',
   'acres': 'AreaCalculator',
+  'acre': 'AreaCalculator',
+  'ac': 'AreaCalculator',
   'hectares': 'AreaCalculator',
-  
-  // Volume
+  'hectare': 'AreaCalculator',
+  'ha': 'AreaCalculator',
   'liters': 'VolumeCalculator',
+  'liter': 'VolumeCalculator',
+  'l': 'VolumeCalculator',
+  'L': 'VolumeCalculator',
   'gallons': 'VolumeCalculator',
+  'gallon': 'VolumeCalculator',
+  'gal': 'VolumeCalculator',
   'cubic meters': 'VolumeCalculator',
-  
-  // Speed
+  'cubic meter': 'VolumeCalculator',
+  'm³': 'VolumeCalculator',
+  'm3': 'VolumeCalculator',
+  'milliliters': 'VolumeCalculator',
+  'milliliter': 'VolumeCalculator',
+  'ml': 'VolumeCalculator',
+  'mL': 'VolumeCalculator',
   'meters per second': 'SpeedConverter',
+  'm/s': 'SpeedConverter',
+  'mps': 'SpeedConverter',
   'kilometers per hour': 'SpeedConverter',
+  'km/h': 'SpeedConverter',
+  'kph': 'SpeedConverter',
   'miles per hour': 'SpeedConverter',
-  
-  // Special calculations
+  'mph': 'SpeedConverter',
   'bmi': 'BMICalculator',
   'discount': 'DiscountCalculator',
   'percentage': 'DiscountCalculator'
@@ -170,74 +320,266 @@ const suggestions: Suggestion[] = [
   { type: 'operation', value: '%', display: 'Percentage', category: 'math', related: ['discount', 'ratio'] }
 ];
 
+// Update convertToLatex function
+const convertToLatex = (formula: string): string => {
+  return formatArithmeticResult(formula)
+    // Fix integral notation
+    .replace(/∫\s*\((.*?)\)\s*dx/g, '\\int ($1)\\,dx') // Integral with parentheses
+    .replace(/∫\s*(.*?)\s*dx/g, '\\int $1\\,dx')      // Regular integral
+    // Fix exponents and subscripts
+    .replace(/(\d+|[a-z])(\d+)/g, '$1^{$2}')          // Convert a2 to a^{2}
+    .replace(/\^(\d+)/g, '^{$1}')
+    .replace(/\_(\d+)/g, '_{$1}')
+    // Fix fractions
+    .replace(/\(([^/]+)\/([^)]+)\)/g, '\\frac{$1}{$2}')
+    .replace(/([^/\s]+)\/([^/\s]+)/g, '\\frac{$1}{$2}')
+    // Other mathematical symbols
+    .replace(/×/g, '\\times')
+    .replace(/\*/g, '\\times')
+    .replace(/±/g, '\\pm')
+    .replace(/→/g, '\\rightarrow')
+    .replace(/π/g, '\\pi')
+    .replace(/σ/g, '\\sigma')
+    .replace(/θ/g, '\\theta')
+    .replace(/∑/g, '\\sum')
+    .replace(/∞/g, '\\infty')
+    .replace(/…/g, '\\cdots')
+    .replace(/\.\.\./g, '\\cdots')
+    // Add proper spacing
+    .replace(/=/g, ' = ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+// Add this function to normalize mathematical expressions
+const normalizeExpression = (expr: string): string => {
+  return expr
+    .replace(/(\d+)\s*x\s*(\d+)/g, '$1×$2')  // Convert "2x3" to "2×3"
+    .replace(/\*/g, '×')  // Convert "*" to "×"
+    .replace(/([0-9])\s+([0-9])/g, '$1×$2');  // Convert "2 3" to "2×3"
+};
+
+// Add this helper function before TagSearch component
+const isComplexFormula = (formula: string): boolean => {
+  // Check for indicators of complex formulas
+  return formula.length > 30 || // Long formulas
+    formula.includes('...') || // Series
+    formula.includes('∫') || // Integrals
+    formula.includes('∑') || // Summations
+    formula.includes('∏') || // Products
+    formula.includes('∇') || // Vector operations
+    formula.includes('partial') || // Partial derivatives
+    formula.includes('\\frac') || // Fractions
+    formula.match(/[₀₁₂₃₄₅₆₇₈₉].*[₀₁₂₃₄₅₆₇₈₉]/) !== null; // Multiple subscripts
+};
+
+const formatArithmeticResult = (result: string): string => {
+  // Only format if it's an arithmetic operation (contains numbers and equals)
+  if (result.includes('=') && /\d/.test(result)) {
+    // Check if it's not a formula (formulas usually contain letters)
+    const isArithmetic = !/[a-zA-Z]/.test(result.replace('log', '')); // ignore 'log' in formulas
+    if (isArithmetic) {
+      return result.replace('=', '\\\\ =');  // LaTeX newline before equals
+    }
+  }
+  return result;
+};
+
+const isCalculationQuery = (value: string): boolean => {
+  const calculationKeywords = [
+    'evaluate', 'calculate', 'compute', 'find', 'solve',
+    'value', 'integral', 'derivative', 'sum', 'product'
+  ];
+  const lowercaseValue = value.toLowerCase();
+  return calculationKeywords.some(keyword => lowercaseValue.startsWith(keyword));
+};
+
+const isFormulaQuery = (query: string): boolean => {
+  const lowercaseQuery = query.toLowerCase();
+  const formulaKeywords = [
+    'formula', 'theorem', 'law', 'equation', 'rule',
+    'pythagoras', 'pythagorean', 'circle', 'sphere', 'cylinder',
+    'area', 'volume', 'circumference', 'density', 'force',
+    'taylor', 'euler', 'fourier', 'maxwell', 'einstein'
+  ];
+  
+  return formulaKeywords.some(keyword => lowercaseQuery.includes(keyword));
+};
+
+// Add new helper function for cleaning LaTeX output
+const cleanLatexOutput = (text: string): string => {
+  return text
+    .replace(/\$(.*?)\$/g, '$1')                    // Remove single dollar signs
+    .replace(/\\int_(\d+)\^(\d+)/g, '\\int_{$1}^{$2}') // Fix integral bounds
+    .replace(/\\int\s+/g, '\\int ')                 // Fix integral spacing
+    .replace(/dx/g, '\\,dx')                        // Add proper differential spacing
+    .replace(/([a-z])(\d+)/g, '$1^{$2}')           // Fix exponents
+    .replace(/\\approx/g, '≈')                      // Convert approx to symbol
+    .replace(/≈/g, '\\approx ')                     // Ensure proper spacing for approx
+    .replace(/\s*,\s*/g, ', ');                     // Clean up comma spacing
+};
+
+// Add this helper function
+const findMatchingUnit = (query: string): string | undefined => {
+  const words = query.toLowerCase().split(/\s+/);
+  return words.find(word => 
+    Object.keys(unitVariations).some(unit => 
+      word === unit || 
+      word.startsWith(unit + ' ') || 
+      word.endsWith(' ' + unit)
+    )
+  );
+};
+
 export default function TagSearch({ onSearch, onQueryChange, placeholder, allTags, noCardsFound = false }: TagSearchProps) {
   const id = useId();
   const [inputValue, setInputValue] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAIMode, setIsAIMode] = useState(false);  // New state to track AI mode
 
   // Compute if a matching card exists from allTags
   const hasMatchingCard = allTags.some(tag =>
     tag.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  // Handle keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        // Clear everything on ESC
-        setInputValue('');
-        setResult(null);
-        onSearch('');
-        if (onQueryChange) {
-          onQueryChange('');
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onSearch, onQueryChange]);
-
-  const processInputQuery = async (value: string) => {
-    if (!value || !value.trim()) {
-      return;
-    }
-
-    // Check for mathematical query
+  // Add this utility function inside the component
+  const isProcessableQuery = (value: string) => {
+    if (!value || !value.trim()) return false;
+    
+    const lowercaseValue = value.toLowerCase();
     const hasMathOperators = value.match(/[+\-*/%=<>≤≥≠∈∉⊂⊃∪∩→]/);
     const hasNumbers = /\d/.test(value);
-    const isMathQuery = value.toLowerCase().match(/^(let|if|then|solve|find|prove|calculate|what|how)/);
+    const isMathQuery = lowercaseValue.match(/^(let|if|then|solve|find|prove|calculate|what|how)/);
+    const hasUnits = findMatchingUnit(lowercaseValue) !== undefined;
     
-    if ((hasMathOperators || hasNumbers || isMathQuery) && value.trim()) {
+    // Enhanced formula matching
+    const isFormulaQuery = (query: string) => {
+      query = query.toLowerCase();
+      // Check both common and advanced formulas
+      const allFormulas = { ...commonFormulas, ...advancedFormulas };
+      return Object.keys(allFormulas).some(formula => {
+        // Split formula name into words for partial matching
+        const formulaWords = formula.split(' ');
+        const queryWords = query.split(' ');
+        // Match if any word from the query matches any word from the formula
+        return queryWords.some(qWord => 
+          formulaWords.some(fWord => fWord.includes(qWord) || qWord.includes(fWord))
+        ) || formula.includes(query) || query.includes('formula');
+      });
+    };
+
+    return (hasMathOperators && hasNumbers) || 
+           (isMathQuery && (hasNumbers || hasUnits)) ||
+           (hasNumbers && hasUnits) ||
+           isFormulaQuery(lowercaseValue);
+  };
+
+  const processInputQuery = async (value: string) => {
+    const normalizedValue = normalizeExpression(value).toLowerCase();
+    
+    // First check if it's a calculation or problem-solving request
+    if (isCalculationQuery(normalizedValue) || normalizedValue.startsWith('if') || 
+        normalizedValue.includes('solve for') || normalizedValue.includes('integral')) {
+      setIsAIMode(true);
       setIsProcessing(true);
       try {
-        const response = await processQuery(value);
-        setResult(response);
+        const response = await processQuery(normalizedValue);
+        // Clean up the LaTeX in the response
+        setResult(cleanLatexOutput(response));
       } catch (error) {
         console.error('Error processing query:', error);
         setResult('Error processing query');
       }
       setIsProcessing(false);
+      return;
     }
+
+    // Then check for exact formula matches only if formula keywords are present
+    if (isFormulaQuery(normalizedValue)) {
+      const allFormulas = { ...commonFormulas, ...advancedFormulas };
+      const formulaMatch = Object.entries(allFormulas).find(([formula]) => {
+        return formula.toLowerCase().includes(normalizedValue) || 
+               normalizedValue.includes(formula.toLowerCase());
+      });
+
+      if (formulaMatch) {
+        setIsAIMode(true);
+        setResult(formulaMatch[1]);
+        return;
+      }
+    }
+
+    // Check for units in the query, including shortforms
+    const matchedUnit = findMatchingUnit(normalizedValue);
+    if (matchedUnit) {
+      const canonicalUnit = unitVariations[matchedUnit as keyof typeof unitVariations];
+      const componentType = unitMappings[canonicalUnit as keyof typeof unitMappings];
+      if (componentType) {
+        setIsAIMode(true);
+        setIsProcessing(true);
+        try {
+          const response = await processQuery(normalizedValue);
+          setResult(cleanLatexOutput(response));
+        } catch (error) {
+          console.error('Error processing query:', error);
+          setResult('Error processing query');
+        }
+        setIsProcessing(false);
+        return;
+      }
+    }
+
+    // Fallback to general query processing
+    if (!isProcessableQuery(normalizedValue)) return;
+
+    setIsAIMode(true);
+    setIsProcessing(true);
+    try {
+      const response = await processQuery(normalizedValue);
+      setResult(response);
+    } catch (error) {
+      console.error('Error processing query:', error);
+      setResult('Error processing query');
+    }
+    setIsProcessing(false);
   };
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
-    setResult(null); // Clear result first
+    if (isAIMode) {
+      // If in AI mode, don't filter cards
+      setResult(null);
+      setIsAIMode(false);
+    }
     
     if (!value || !value.trim()) {
-      onSearch(''); // Show cards when empty
-      if (onQueryChange) {
-        onQueryChange('');
-      }
+      onSearch('');
+      if (onQueryChange) onQueryChange('');
       return;
     }
 
-    if (onQueryChange) {
-      onQueryChange(value);
+    // Only filter cards if not in AI mode
+    if (!isAIMode) {
+      if (onQueryChange) onQueryChange(value);
     }
   };
+
+  const handleClear = () => {
+    setInputValue('');
+    setResult(null);
+    setIsAIMode(false);
+    onSearch('');
+    if (onQueryChange) onQueryChange('');
+  };
+
+  // Update button visibility logic
+  const showAskAIButton = inputValue && 
+    !hasMatchingCard && 
+    !isProcessing && 
+    !result && 
+    !isAIMode && 
+    isProcessableQuery(inputValue);
 
   return (
     <div className="w-full space-y-4">
@@ -245,19 +587,17 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
         <div className="flex flex-1 items-center space-x-2">
           <div className="relative flex-1">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input id={id} className="peer pe-9 ps-9" placeholder="Search or ask AI for a calculation..."
+            <Input 
+              id={id} 
+              className="peer pe-9 ps-9" 
+              placeholder="Search or ask AI for a calculation..."
               value={inputValue}
               autoComplete="off"
               onChange={(e) => handleInputChange(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Escape') {
                   e.preventDefault();
-                  setInputValue('');
-                  setResult(null);
-                  onSearch('');
-                  if (onQueryChange) {
-                    onQueryChange('');
-                  }
+                  handleClear();
                 } else if (e.key === 'Enter') {
                   e.preventDefault();
                   processInputQuery(inputValue);
@@ -266,46 +606,52 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
             />
             {inputValue && (
               <button
-                onClick={() => {
-                  setInputValue('');
-                  setResult(null);
-                  onSearch('');
-                  if (onQueryChange) {
-                    onQueryChange('');
-                  }
-                }}
+                onClick={handleClear}
                 className="absolute right-2 top-2.5 h-4 w-4 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
             )}
           </div>
-          {inputValue && !hasMatchingCard && !isProcessing && !result && (
+          {showAskAIButton && (
             <ButtonColorful
               label="Ask AI"
               onClick={() => processInputQuery(inputValue)}
               type="button"
-              className="min-w-[100px]" // Button already has h-10 inside ButtonColorful
+              className="min-w-[100px"
             />
           )}
         </div>
       </div>
 
       {isProcessing ? (
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <div className="rounded-lg border text-card-foreground shadow-sm hover:shadow-md transition-shadow">
           <div className="p-6">
-            <div className="flex items-center space-x-2">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <p className="text-sm">Processing query...</p>
+            <div className="flex items-center justify-center space-x-2">
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <p className="text-sm font-medium">Processing your query...</p>
             </div>
           </div>
         </div>
       ) : result && (
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-          <div className="p-6">
-            <h4 className="text-sm font-medium">Result</h4>
-            <div className="mt-2 whitespace-pre-wrap text-sm">{result}</div>
-          </div>
+        <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all">
+          <ScrollArea className="w-full whitespace-nowrap px-4">
+            <div className="py-10 flex justify-center items-center min-h-[60px] mx-auto">
+              {isComplexFormula(result) ? (
+                <LatexAurora 
+                  formula={convertToLatex(result)}
+                  className="font-bold tracking-wide text-xl"
+                />
+              ) : (
+                <AuroraText className="font-bold tracking-wide text-6xl">
+                  {result.includes('=') && /\d/.test(result) && !/[a-zA-Z]/.test(result.replace('log', '')) 
+                    ? result.replace('=', '\n=') 
+                    : result}
+                </AuroraText>
+              )}
+            </div>
+            <ScrollBar orientation="horizontal" className="mt-2" />
+          </ScrollArea>
         </div>
       )}
     </div>
