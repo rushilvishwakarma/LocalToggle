@@ -144,7 +144,7 @@ export function BMICalculator() {
               {/* Weight Input */}
               <div className="flex items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     Weight
                   </label>
                   <div className="flex gap-2">
@@ -190,7 +190,7 @@ export function BMICalculator() {
               {/* Height Input */}
               <div className="flex items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     Height
                   </label>
                   <div className="flex gap-2">

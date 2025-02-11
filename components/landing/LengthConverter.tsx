@@ -167,7 +167,7 @@ export function LengthCalculator() {  // Changed component name
               {/* From and To Unit Pickers with Swap Button */}
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
                   </label>
                   <Popover>
@@ -238,7 +238,7 @@ export function LengthCalculator() {  // Changed component name
                 </div>
 
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     To
                   </label>
                   <Popover>
@@ -299,7 +299,7 @@ export function LengthCalculator() {  // Changed component name
 
               {/* Input Value */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+                <label className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
                 <Input

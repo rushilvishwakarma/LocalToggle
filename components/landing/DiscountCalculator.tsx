@@ -106,7 +106,7 @@ export function DiscountCalculator() {
             <div className="mt-4 flex flex-col gap-3">
               {/* Original Price Input */}
               <div className="flex flex-col w-full">
-                <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400 flex items-center gap-1">
+                <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400 flex items-center gap-1">
                   Original Price <HandCoins size={16} />
                 </label>
                 <Input
@@ -121,7 +121,7 @@ export function DiscountCalculator() {
 
               {/* Discount Percentage Input */}
               <div className="flex flex-col w-full">
-                <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Discount (%)
                 </label>
                 <Input

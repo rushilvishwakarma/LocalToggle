@@ -70,7 +70,7 @@ export function DateCalculator() {
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50 mb-6">
               Date Calculator
             </MorphingDialogTitle>
-            <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+            <label className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
               Date Range (From - To)
             </label>
             

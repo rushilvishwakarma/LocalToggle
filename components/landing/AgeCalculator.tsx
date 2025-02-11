@@ -296,7 +296,7 @@ export function AgeCalculator() {
             <div className="mt-4 flex flex-col gap-3 items-center">
               {/* Date of Birth Picker */}
               <div className="flex items-center justify-between w-full">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+                <label className="mr-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Date of Birth
                 </label>
                 <Popover>
@@ -330,7 +330,7 @@ export function AgeCalculator() {
 
               {/* Today Date Display */}
               <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-2">
+                <div className="mr-2 flex items-center gap-2">
                   <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                     Today
                   </label>
@@ -348,18 +348,23 @@ export function AgeCalculator() {
                   </Button>
                 </div>
                 {isRealtime ? (
-                  <Button
-                    variant="outline"
-                    className="w-[300px] justify-start text-left font-normal group relative"
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    <span className="flex items-center gap-2">
-                      <span>{format(currentTime, "MMM d")} {format(currentTime, "hh:mm:ss aa")}</span>
+                <Button
+                  variant="outline"
+                  className="w-[300px] justify-start text-left font-normal group relative"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  <span className="flex items-center gap-2">
+                    <span className="hidden sm:inline">
+                      {format(currentTime, "MMM d")} {format(currentTime, "hh:mm:ss aa")}
                     </span>
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground opacity-70">
-                      Current Time
-                    </span>
-                  </Button>
+                  </span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground opacity-70 sm:hidden">
+                    Current Date & Time
+                  </span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground opacity-70 hidden sm:inline">
+                    Current Time
+                  </span>
+                </Button>
                 ) : (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -368,7 +373,14 @@ export function AgeCalculator() {
                         className="w-[300px] justify-start text-left font-normal"
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {format(currentTime, "PPP")} {manualTime}
+                        <span className="flex items-center gap-2">
+                          <span className="hidden sm:inline">
+                            {format(currentTime, "PPP")} {manualTime}
+                          </span>
+                          <span className="sm:hidden">
+                            {format(currentTime, "PPP")}
+                          </span>
+                        </span>
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">

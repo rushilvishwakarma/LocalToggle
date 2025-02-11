@@ -146,7 +146,7 @@ export function DataCalculator() {
               {/* From and To Unit Pickers with Swap Button */}
               <div className="flex items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
                   </label>
                   <Popover>
@@ -191,7 +191,7 @@ export function DataCalculator() {
                 </Button>
                 </div>
                 <div className="flex flex-col w-full">
-                  <label className="pb-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     To
                   </label>
                   <Popover>
@@ -231,7 +231,7 @@ export function DataCalculator() {
 
               {/* Input Value */}
               <div className="flex items-center justify-between w-full">
-                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
+                <label className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
                 <Input

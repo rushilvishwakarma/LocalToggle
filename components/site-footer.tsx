@@ -4,16 +4,21 @@ import Image from 'next/image'
 
 const footerNavs = [
    {
-      label: 'Legal',
+      /*label: 'Legal',*/
       items: [
          {
             href: '/terms',
-            name: 'Terms',
+            name: 'Terms (Coming Soon)',
          },
 
          {
             href: '/privacy',
-            name: 'Privacy',
+            name: 'Privacy (Coming Soon)',
+         },
+
+         {
+            href: '/docs',
+            name: 'Docs (Coming Soon)',
          },
       ],
    },
@@ -31,7 +36,7 @@ export function SiteFooter() {
    return (
       <footer>
          <div className="mx-auto w-full max-w-screen-xl xl:pb-2">
-            <div className="gap-4 p-3 px-8 lg:px-14 py-4 sm:pb-10 md:flex md:justify-between">
+            <div className="gap-4 p-3 px-6 lg:px-14 py-4 sm:pb-10 md:flex md:justify-between">
                <div className="mb-12 flex flex-col gap-4">
                   <Link href="/" className="flex items-center gap-2">
                      <Image
@@ -70,7 +75,7 @@ export function SiteFooter() {
                </div>
             </div>
 
-            <div className="flex flex-col gap-2 rounded-md border-neutral-700/20 px-8 lg:px-14 py-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-2 rounded-md border-neutral-700/20 px-6 lg:px-14 py-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
                <div className="flex space-x-5 sm:mt-0 sm:justify-center">
                   {footerSocials.map(social => (
                      <Link
