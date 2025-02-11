@@ -352,16 +352,30 @@ const normalizeExpression = (expr: string): string => {
 };
 
 // Add this helper function before TagSearch component
+const isSimpleFraction = (formula: string): boolean => {
+  return /^\d+\/\d+\s*=/.test(formula) || // Matches patterns like "1/4 = "
+         /^\d+\s*\/\s*\d+\s*=/.test(formula); // Matches patterns like "1 / 4 = "
+};
+
+// Update isComplexFormula function to be more specific
 const isComplexFormula = (formula: string): boolean => {
-  // Check for indicators of complex formulas
-  return formula.length > 30 || // Long formulas
+  // First check if it's a LaTeX formatted string
+  if (formula.trim().startsWith('$') && formula.trim().endsWith('$')) {
+    return true;
+  }
+
+  // Don't treat simple fractions as complex formulas
+  if (isSimpleFraction(formula)) return false;
+  
+  // Other complex formula checks
+  return formula.includes('\\sqrt') || // Square roots
+    formula.includes('\\frac') || // Fractions
     formula.includes('...') || // Series
     formula.includes('∫') || // Integrals
     formula.includes('∑') || // Summations
     formula.includes('∏') || // Products
     formula.includes('∇') || // Vector operations
     formula.includes('partial') || // Partial derivatives
-    formula.includes('\\frac') || // Fractions
     formula.match(/[₀₁₂₃₄₅₆₇₈₉].*[₀₁₂₃₄₅₆₇₈₉]/) !== null; // Multiple subscripts
 };
 
@@ -371,7 +385,11 @@ const formatArithmeticResult = (result: string): string => {
     // Check if it's not a formula (formulas usually contain letters)
     const isArithmetic = !/[a-zA-Z]/.test(result.replace('log', '')); // ignore 'log' in formulas
     if (isArithmetic) {
-      return result.replace('=', '\\\\ =');  // LaTeX newline before equals
+      // For simple fractions, don't add newline
+      if (isSimpleFraction(result)) {
+        return result;
+      }
+      return result.replace('=', '\\\\ =');  // LaTeX newline before equals for other cases
     }
   }
   return result;
@@ -398,17 +416,10 @@ const isFormulaQuery = (query: string): boolean => {
   return formulaKeywords.some(keyword => lowercaseQuery.includes(keyword));
 };
 
-// Add new helper function for cleaning LaTeX output
+// Remove or simplify cleanLatexOutput so it no longer overrides AI output
 const cleanLatexOutput = (text: string): string => {
-  return text
-    .replace(/\$(.*?)\$/g, '$1')                    // Remove single dollar signs
-    .replace(/\\int_(\d+)\^(\d+)/g, '\\int_{$1}^{$2}') // Fix integral bounds
-    .replace(/\\int\s+/g, '\\int ')                 // Fix integral spacing
-    .replace(/dx/g, '\\,dx')                        // Add proper differential spacing
-    .replace(/([a-z])(\d+)/g, '$1^{$2}')           // Fix exponents
-    .replace(/\\approx/g, '≈')                      // Convert approx to symbol
-    .replace(/≈/g, '\\approx ')                     // Ensure proper spacing for approx
-    .replace(/\s*,\s*/g, ', ');                     // Clean up comma spacing
+  // Simply trim the text, letting the AI decide whether to use LaTeX formatting
+  return text.trim();
 };
 
 // Add this helper function
@@ -436,37 +447,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
   );
 
   // Add this utility function inside the component
-  const isProcessableQuery = (value: string) => {
-    if (!value || !value.trim()) return false;
-    
-    const lowercaseValue = value.toLowerCase();
-    const hasMathOperators = value.match(/[+\-*/%=<>≤≥≠∈∉⊂⊃∪∩→]/);
-    const hasNumbers = /\d/.test(value);
-    const isMathQuery = lowercaseValue.match(/^(let|if|then|solve|find|prove|calculate|what|how)/);
-    const hasUnits = findMatchingUnit(lowercaseValue) !== undefined;
-    
-    // Enhanced formula matching
-    const isFormulaQuery = (query: string) => {
-      query = query.toLowerCase();
-      // Check both common and advanced formulas
-      const allFormulas = { ...commonFormulas, ...advancedFormulas };
-      return Object.keys(allFormulas).some(formula => {
-        // Split formula name into words for partial matching
-        const formulaWords = formula.split(' ');
-        const queryWords = query.split(' ');
-        // Match if any word from the query matches any word from the formula
-        return queryWords.some(qWord => 
-          formulaWords.some(fWord => fWord.includes(qWord) || qWord.includes(fWord))
-        ) || formula.includes(query) || query.includes('formula');
-      });
-    };
-
-    return (hasMathOperators && hasNumbers) || 
-           (isMathQuery && (hasNumbers || hasUnits)) ||
-           (hasNumbers && hasUnits) ||
-           isFormulaQuery(lowercaseValue);
+  const isProcessableQuery = (value: string): boolean => {
+    return value.trim().length > 0;
   };
 
+  // In processInputQuery, use the raw response without forcing conversion
   const processInputQuery = async (value: string) => {
     const normalizedValue = normalizeExpression(value).toLowerCase();
     
@@ -477,8 +462,8 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
       setIsProcessing(true);
       try {
         const response = await processQuery(normalizedValue);
-        // Clean up the LaTeX in the response
-        setResult(cleanLatexOutput(response));
+        // Use the AI's output as is
+        setResult(response);
       } catch (error) {
         console.error('Error processing query:', error);
         setResult('Error processing query');
@@ -629,16 +614,14 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
         <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all">
           <ScrollArea className="w-full whitespace-nowrap px-4">
             <div className="py-10 flex justify-center items-center min-h-[60px] mx-auto">
-              {isComplexFormula(result) ? (
+              {(result.trim().startsWith("$") && result.trim().endsWith("$")) || isComplexFormula(result) ? (
                 <LatexAurora 
-                  formula={convertToLatex(result)}
+                  formula={result}
                   className="font-bold tracking-wide text-xl"
                 />
               ) : (
-                <AuroraText className="font-bold tracking-wide text-6xl">
-                  {result.includes('=') && /\d/.test(result) && !/[a-zA-Z]/.test(result.replace('log', '')) 
-                    ? result.replace('=', '\n=') 
-                    : result}
+                <AuroraText className="font-bold tracking-wide text-6xl py-2">
+                  {result}
                 </AuroraText>
               )}
             </div>
