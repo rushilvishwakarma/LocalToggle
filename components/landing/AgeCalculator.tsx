@@ -268,7 +268,7 @@ export function AgeCalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]sm:whitespace-nowrap max-w-[6.5rem]">
             Age Calculator
           </MorphingDialogTitle>
           <button
@@ -292,7 +292,7 @@ export function AgeCalculator() {
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
               Age Calculator
             </MorphingDialogTitle>
-            <div className="mt-4 flex flex-col gap-3 items-center">
+            <div className="mt-6 flex flex-col gap-3 items-center">
               {/* Date of Birth Picker */}
               <div className="flex items-center justify-between w-full">
                 <label className="mr-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">

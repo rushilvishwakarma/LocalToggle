@@ -16,6 +16,7 @@ import { TimeConverter } from '@/components/landing/TimeConverter';
 import TagSearch from '@/components/smart-search';
 import { useState } from 'react';
 import { Option } from '@/components/ui/multiselect';
+import { DateOfBirthCalculator } from "./DateOfBirthCalculator";
 
 // Define component tags with categories
 const tagCategories = {
@@ -63,7 +64,12 @@ const unitMappings = {
   // Speed
   'meters per second': 'SpeedConverter',
   'kilometers per hour': 'SpeedConverter',
-  'miles per hour': 'SpeedConverter'
+  'miles per hour': 'SpeedConverter',
+  
+  // Date of Birth
+  'birth': 'DateOfBirthCalculator',
+  'age': 'DateOfBirthCalculator',
+  'year': 'DateOfBirthCalculator',
 } as const;
 
 // Add unit variations mapping
@@ -109,6 +115,11 @@ const unitAliases = {
   'mb': 'megabytes',
   'gb': 'gigabytes',
   'tb': 'terabytes',
+  
+  // Date of Birth
+  'birth': 'birth',
+  'born': 'birth',
+  'birthday': 'birth',
 } as const;
 
 // Create formatted options for the MultipleSelector
@@ -147,7 +158,8 @@ const componentTags = {
   SpeedConverter: ['converter', 'math', 'speed', 'metric', 'imperial'],
   TempCalculator: ['converter', 'temperature', 'metric', 'imperial'],
   TimeConverter: ['converter', 'time', 'date'],
-  VolumeCalculator: ['converter', 'math', 'volume', 'metric', 'imperial']
+  VolumeCalculator: ['converter', 'math', 'volume', 'metric', 'imperial'],
+  DateOfBirthCalculator: ['calculator', 'personal', 'time', 'date', 'birth'],
 };
 
 export default function HeroSection() {
@@ -240,6 +252,12 @@ export default function HeroSection() {
           </div>
         )}
 
+        {filterComponents('DateOfBirthCalculator') && (
+          <div className="w-full">
+            <DateOfBirthCalculator />
+          </div>
+        )}
+
         {filterComponents('AreaCalculator') && (
           <div className="w-full">
             <AreaCalculator />
@@ -311,6 +329,7 @@ export default function HeroSection() {
             <VolumeCalculator />
           </div>
         )}
+
       </div>
     </section>
   );

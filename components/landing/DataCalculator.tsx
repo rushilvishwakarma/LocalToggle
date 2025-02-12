@@ -117,8 +117,8 @@ export function DataCalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-                    <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
-            Data Storage Converter
+                    <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]sm:whitespace-nowrap max-w-[6.5rem]">
+            Storage Converter
           </MorphingDialogTitle>
           <button
             type="button"
@@ -134,17 +134,17 @@ export function DataCalculator() {
           style={{
             borderRadius: "24px",
           }}
-          className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
+          className="mx-3 pointer-events-auto relative flex h-auto w-[95%] max-w-[500px] flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950"
         >
           {/* Dialog Content */}
-          <div className="px-6 pt-6 pb-3">
-            <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
+          <div className="px-4 sm:px-6 pt-6 pb-3">
+            <MorphingDialogTitle className="text-xl sm:text-2xl text-gray-950 dark:text-gray-50">
               Data Storage Converter
             </MorphingDialogTitle>
-            <div className="mt-4 flex flex-col gap-3 items-center">
+            <div className="mt-6 flex flex-col gap-3 items-center">
 
               {/* From and To Unit Pickers with Swap Button */}
-              <div className="flex items-center justify-between w-full gap-2">
+              <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
                   <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
@@ -162,8 +162,8 @@ export function DataCalculator() {
                      </Button>
 
                     </PopoverTrigger>
-                    <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-2 gap-2">
+                    <PopoverContent className="w-[200px] sm:w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}
@@ -183,11 +183,11 @@ export function DataCalculator() {
                 </div>
 
                 {/* Swap Button */}
-                <div className="pt-5">
+                <div className="py-2 sm:pt-5">
                 <Button 
                 variant="ghost"
-                onClick={handleSwapUnits} className="my-2">
-                  <ArrowUpDown className="w-5 h-5" />
+                onClick={handleSwapUnits} className="p-2">
+                  <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
                 </div>
                 <div className="flex flex-col w-full">
@@ -208,8 +208,8 @@ export function DataCalculator() {
 
 
                     </PopoverTrigger>
-                    <PopoverContent className="w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-2 gap-2">
+                    <PopoverContent className="w-[200px] sm:w-[280px] p-2 max-h-[400px] overflow-y-auto" align="start">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {units.map((unit) => (
                           <Button
                             key={unit.name}
@@ -230,8 +230,8 @@ export function DataCalculator() {
               </div>
 
               {/* Input Value */}
-              <div className="flex items-center justify-between w-full">
-                <label className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
+                <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
                 <Input
@@ -240,13 +240,13 @@ export function DataCalculator() {
                   placeholder="Enter value"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}
-                  className="w-[400px] p-2 border border-gray-300 rounded-md"
+                  className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"
                 />
               </div>
 
               {/* Converted Value */}
-              <div className="mt-4 mb-4 text-center">
-                <AuroraText className="text-3xl font-bold">
+              <div className="mt-4 mb-4 text-center w-full">
+                <AuroraText className="text-2xl sm:text-3xl font-bold break-words">
                   {convertedValue} {getUnitSymbol(toUnit)}
                 </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">

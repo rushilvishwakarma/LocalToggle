@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
-import { Calculator } from "lucide-react";
+import React, { useState, useEffect, useId } from "react";
+import { Calculator, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { CakeIcon } from "lucide-react";;
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,8 @@ const heightUnits = [
 ];
 
 export function BMICalculator() {
+  const weightId = useId();
+  const heightId = useId();
   const [weightValue, setWeightValue] = useState<string>("");
   const [heightValue, setHeightValue] = useState<string>("");
   const [weightUnit, setWeightUnit] = useState<string>("Kilograms");
@@ -116,7 +119,7 @@ export function BMICalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-           <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+           <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]sm:whitespace-nowrap max-w-[6.5rem]">
             BMI Calculator
           </MorphingDialogTitle>
           <button
@@ -140,103 +143,101 @@ export function BMICalculator() {
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50 text-left">
               BMI Calculator
             </MorphingDialogTitle>
-            <div className="mt-4 flex flex-col gap-3 items-center">
+            <div className="mt-6 flex flex-col gap-3 items-center">
               {/* Weight Input */}
-              <div className="flex items-center justify-between w-full gap-2">
-                <div className="flex flex-col w-full">
-                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
-                    Weight
-                  </label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Enter weight"
-                      value={weightValue}
-                      onChange={handleWeightChange}
-                      className="flex-1"
-                    />
-                    <Popover>
-                      <PopoverTrigger asChild>
-                      <Button variant="outline" className="w-[180px]">
-                        {weightUnit}
-                        <span className="text-xs text-gray-400">
-                        {getUnitSymbol(weightUnit)}
+              <div className="space-y-2 w-full">
+                <label htmlFor={weightId} className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400 mb-2">
+                  Weight
+                </label>
+                <div className="relative">
+                  <Input
+                    id={weightId}
+                    className="pe-24"
+                    placeholder="Enter weight"
+                    type="text"
+                    inputMode="numeric"
+                    value={weightValue}
+                    onChange={handleWeightChange}
+                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        className="absolute inset-y-0 end-0 flex h-full w-24 items-center justify-between rounded-e-lg border-l border-input bg-transparent px-3 text-sm text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <span>{getUnitSymbol(weightUnit)}</span>
+                        <ChevronDown size={16} strokeWidth={2} />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="end">
+                      <div className="grid grid-cols-1 gap-2">
+                        {weightUnits.map((unit) => (
+                          <Button
+                            key={unit.name}
+                            variant="ghost"
+                            onClick={() => setWeightUnit(unit.name)}
+                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                          >
+                            <span className="text-left">{unit.name}</span>
+                            <span className="ml-2 text-gray-400 shrink-0">
+                              {unit.symbol}
                             </span>
-                      </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                        <div className="grid grid-cols-1 gap-2">
-                          {weightUnits.map((unit) => (
-                            <Button
-                              key={unit.name}
-                              variant="ghost"
-                              onClick={() => setWeightUnit(unit.name)}
-                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                            >
-                              <span className="text-left">{unit.name}</span>
-                              <span className="ml-2 text-gray-400 shrink-0">
-                                {unit.symbol}
-                              </span>
-                            </Button>
-                          ))}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
               {/* Height Input */}
-              <div className="flex items-center justify-between w-full gap-2">
-                <div className="flex flex-col w-full">
-                  <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
-                    Height
-                  </label>
-                  <div className="flex gap-2">
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      placeholder="Enter height"
-                      value={heightValue}
-                      onChange={handleHeightChange}
-                      className="flex-1"
-                    />
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" className="w-[180px]">
-                        {heightUnit}
-                        <span className="text-xs text-gray-400">
-                        {getUnitSymbol(heightUnit)}
+              <div className="space-y-2 w-full">
+                <label htmlFor={heightId} className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400 mb-2">
+                  Height
+                </label>
+                <div className="relative">
+                  <Input
+                    id={heightId}
+                    className="pe-24"
+                    placeholder="Enter height"
+                    type="text"
+                    inputMode="numeric"
+                    value={heightValue}
+                    onChange={handleHeightChange}
+                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        className="absolute inset-y-0 end-0 flex h-full w-24 items-center justify-between rounded-e-lg border-l border-input bg-transparent px-3 text-sm text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <span>{getUnitSymbol(heightUnit)}</span>
+                        <ChevronDown size={16} strokeWidth={2} />
+                      </button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="end">
+                      <div className="grid grid-cols-1 gap-2">
+                        {heightUnits.map((unit) => (
+                          <Button
+                            key={unit.name}
+                            variant="ghost"
+                            onClick={() => setHeightUnit(unit.name)}
+                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                          >
+                            <span className="text-left">{unit.name}</span>
+                            <span className="ml-2 text-gray-400 shrink-0">
+                              {unit.symbol}
                             </span>
-                      </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                        <div className="grid grid-cols-1 gap-2">
-                          {heightUnits.map((unit) => (
-                            <Button
-                              key={unit.name}
-                              variant="ghost"
-                              onClick={() => setHeightUnit(unit.name)}
-                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                            >
-                              <span className="text-left">{unit.name}</span>
-                              <span className="ml-2 text-gray-400 shrink-0">
-                                {unit.symbol}
-                              </span>
-                            </Button>
-                          ))}
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
 
               {/* BMI Result */}
               <div className="mt-4 mb-4 text-center">
                 <AuroraText className="text-3xl font-bold">
-                  {bmi > 0 ? `BMI: ${bmi}` : 'BMI'}
+                  {bmi > 0 ? `BMI: ${bmi}` : 'Body mass index'}
                 </AuroraText>
                 {bmi > 0 && (
                   <p className="pt-2 text-sm font-semibold tracking-wide text-gray-50/90">

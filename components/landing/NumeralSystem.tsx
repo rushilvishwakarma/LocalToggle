@@ -34,6 +34,12 @@ function convertNumber(value: string, fromBase: number, toBase: number): string 
   }
 }
 
+// Add this function before the NumeralSystemConverter component
+function calculateBits(value: string): number {
+  if (!value || value === '0') return 0;
+  return value.toString().replace(/^0+/, '').length;
+}
+
 export function NumeralSystemConverter() {
   const [inputValue, setInputValue] = useState<string>("");
   const [fromSystem, setFromSystem] = useState<string>("Decimal");
@@ -93,7 +99,7 @@ export function NumeralSystemConverter() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+          <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]sm:whitespace-nowrap max-w-[6.5rem]">
             Number System
           </MorphingDialogTitle>
           <button
@@ -112,11 +118,11 @@ export function NumeralSystemConverter() {
           }}
           className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[500px]"
         >
-          <div className="px-6 pt-6 pb-3">
+          <div className="relative px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
               Number System
             </MorphingDialogTitle>
-            <div className="mt-4 flex flex-col gap-3 items-center">
+            <div className="mt-6 flex flex-col gap-3 items-center">
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
                   <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
@@ -216,7 +222,7 @@ export function NumeralSystemConverter() {
                 />
               </div>
 
-              <div className="mt-4 mb-4 text-center">
+              <div className="mt-4 mb-10 text-center">
                 <AuroraText className="text-3xl font-bold">
                   {convertedValue}
                 </AuroraText>
@@ -225,6 +231,12 @@ export function NumeralSystemConverter() {
                 </p>
               </div>
             </div>
+            <Badge 
+              variant="outline" 
+              className="absolute bottom-4 right-4 text-xs"
+            >
+              Total {calculateBits(convertedValue)} bits
+            </Badge>
           </div>
           <MorphingDialogClose className="text-gray-50" />
         </MorphingDialogContent>

@@ -170,7 +170,7 @@ export function AreaCalculator() {
         </div>
 
         <div className="flex flex-grow flex-row items-end px-3 sm:px-4 p-3">
-             <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]">
+             <MorphingDialogTitle className="text-md text-gray-400 dark:gray-400 text-left whitespace-normal sm:whitespace-nowrap max-w-[6.5rem]sm:whitespace-nowrap max-w-[6.5rem]">
             Area Converter
           </MorphingDialogTitle>
           <button
@@ -194,7 +194,7 @@ export function AreaCalculator() {
             <MorphingDialogTitle className="text-2xl text-gray-950 dark:text-gray-50">
               Area Converter
             </MorphingDialogTitle>
-            <div className="mt-4 flex flex-col gap-3 items-center">
+            <div className="mt-6 flex flex-col gap-3 items-center">
 
               {/* From and To Unit Pickers with Swap Button */}
               <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
