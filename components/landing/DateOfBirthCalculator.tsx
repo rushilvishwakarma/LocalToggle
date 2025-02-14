@@ -102,6 +102,7 @@ export function DateOfBirthCalculator() {
               min="0"
               max="130"
               maxLength={3}
+              autoFocus={false}
             />
             {error && (
               <p className="text-red-500 text-sm mb-4">{error}</p>

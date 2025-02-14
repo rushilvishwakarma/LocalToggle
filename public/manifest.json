@@ -1,7 +1,7 @@
 {
-  "name": "Local Toggle",
-  "short_name": "LocalToggle",
-  "description": "A tool for local file conversion",
+  "name": "Tangerine",
+  "short_name": "Tangerine",
+  "description": "A tool for local file conversion and unit conversion calculations.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
