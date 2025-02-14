@@ -61,12 +61,20 @@ export function BMICalculator() {
     }
   };
 
+  const validateNumericInput = (value: string): string => {
+    // Allow empty string, digits, and one decimal point
+    const regex = /^\d*\.?\d*$/;
+    return regex.test(value) ? value : weightValue;
+  };
+
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWeightValue(e.target.value);
+    const newValue = validateNumericInput(e.target.value);
+    setWeightValue(newValue);
   };
 
   const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setHeightValue(e.target.value);
+    const newValue = validateNumericInput(e.target.value);
+    setHeightValue(newValue);
   };
 
   useEffect(() => {
@@ -238,7 +246,7 @@ export function BMICalculator() {
               {/* BMI Result */}
               <div className="mt-4 mb-4 text-center">
                 <AuroraText className="text-3xl font-bold">
-                  {bmi > 0 ? `BMI: ${bmi}` : 'Body mass index'}
+                  {bmi > 0 && `BMI: ${bmi}`}
                 </AuroraText>
                 {bmi > 0 && (
                   <p className="pt-2 text-sm font-semibold tracking-wide text-gray-50/90">

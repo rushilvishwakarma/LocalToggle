@@ -7,6 +7,7 @@ import { AuroraText } from "@/components/ui/aurora-text"
 import { LatexAurora } from "@/components/ui/latex-aurora";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge"; // Import BadgeDestructive
 
 interface TagSearchProps {
   onSearch: (query: string) => void;
@@ -439,7 +440,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
   const [inputValue, setInputValue] = useState('');
   const [result, setResult] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isAIMode, setIsAIMode] = useState(false);  // New state to track AI mode
+  const [isGeminiMode, setIsGeminiMode] = useState(false);  // Changed from isAIMode to isGeminiMode
 
   // Compute if a matching card exists from allTags
   const hasMatchingCard = allTags.some(tag =>
@@ -458,12 +459,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
     // First check if it's a calculation or problem-solving request
     if (isCalculationQuery(normalizedValue) || normalizedValue.startsWith('if') || 
         normalizedValue.includes('solve for') || normalizedValue.includes('integral')) {
-      setIsAIMode(true);
       setIsProcessing(true);
       try {
         const response = await processQuery(normalizedValue);
-        // Use the AI's output as is
-        setResult(response);
+        setResult(response.result);
+        setIsGeminiMode(response.isGemini);
       } catch (error) {
         console.error('Error processing query:', error);
         setResult('Error processing query');
@@ -481,7 +481,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
       });
 
       if (formulaMatch) {
-        setIsAIMode(true);
+        setIsGeminiMode(false);  // Using local formulas
         setResult(formulaMatch[1]);
         return;
       }
@@ -493,11 +493,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
       const canonicalUnit = unitVariations[matchedUnit as keyof typeof unitVariations];
       const componentType = unitMappings[canonicalUnit as keyof typeof unitMappings];
       if (componentType) {
-        setIsAIMode(true);
         setIsProcessing(true);
         try {
           const response = await processQuery(normalizedValue);
-          setResult(cleanLatexOutput(response));
+          setResult(response.result);
+          setIsGeminiMode(response.isGemini);
         } catch (error) {
           console.error('Error processing query:', error);
           setResult('Error processing query');
@@ -510,11 +510,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
     // Fallback to general query processing
     if (!isProcessableQuery(normalizedValue)) return;
 
-    setIsAIMode(true);
     setIsProcessing(true);
     try {
       const response = await processQuery(normalizedValue);
-      setResult(response);
+      setResult(response.result);
+      setIsGeminiMode(response.isGemini);
     } catch (error) {
       console.error('Error processing query:', error);
       setResult('Error processing query');
@@ -524,10 +524,10 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
-    if (isAIMode) {
+    if (isGeminiMode) {
       // If in AI mode, don't filter cards
       setResult(null);
-      setIsAIMode(false);
+      setIsGeminiMode(false);
     }
     
     if (!value || !value.trim()) {
@@ -537,7 +537,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
     }
 
     // Only filter cards if not in AI mode
-    if (!isAIMode) {
+    if (!isGeminiMode) {
       if (onQueryChange) onQueryChange(value);
     }
   };
@@ -545,7 +545,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
   const handleClear = () => {
     setInputValue('');
     setResult(null);
-    setIsAIMode(false);
+    setIsGeminiMode(false);
     onSearch('');
     if (onQueryChange) onQueryChange('');
   };
@@ -555,7 +555,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
     !hasMatchingCard && 
     !isProcessing && 
     !result && 
-    !isAIMode && 
+    !isGeminiMode && 
     isProcessableQuery(inputValue);
 
   return (
@@ -611,7 +611,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
           </div>
         </div>
       ) : result && (
-        <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all">
+        <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all relative">
           <ScrollArea className="w-full whitespace-nowrap px-4">
             <div className="py-10 flex justify-center items-center min-h-[60px] mx-auto">
               {(result.trim().startsWith("$") && result.trim().endsWith("$")) || isComplexFormula(result) ? (
@@ -627,6 +627,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
             </div>
             <ScrollBar orientation="horizontal" className="mt-2" />
           </ScrollArea>
+          {isGeminiMode && (
+            <div className="absolute bottom-2 right-2">
+              <Badge variant="secondary">Caution: AI can make mistakes</Badge>
+            </div>
+          )}
         </div>
       )}
     </div>

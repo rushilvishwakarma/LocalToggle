@@ -44,7 +44,7 @@ export function YearOfBirthCalculator() {
 
   const birthYear = age && !error ?
     (currentYear - parseInt(age)).toString() :
-    currentYear.toString();
+    '20XX';
 
   return (
     <MorphingDialog
