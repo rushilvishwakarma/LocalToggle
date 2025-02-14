@@ -131,13 +131,14 @@ export function DataCalculator() {
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{
             borderRadius: "24px",
           }}
           className="mx-3 pointer-events-auto relative flex h-auto w-[95%] max-w-[500px] flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950"
         >
           {/* Dialog Content */}
-          <div className="px-4 sm:px-6 pt-6 pb-3">
+          <div className="px-6 pt-6 pb-3">
             <MorphingDialogTitle className="text-xl sm:text-2xl text-gray-950 dark:text-gray-50">
               Data Storage Converter
             </MorphingDialogTitle>

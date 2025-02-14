@@ -152,6 +152,7 @@ export function LengthCalculator() {  // Changed component name
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{
             borderRadius: "24px",
           }}

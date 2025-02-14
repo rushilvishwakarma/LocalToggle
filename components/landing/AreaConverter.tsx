@@ -184,6 +184,7 @@ export function AreaCalculator() {
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{
             borderRadius: "24px",
           }}

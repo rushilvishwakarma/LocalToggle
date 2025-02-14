@@ -282,6 +282,7 @@ export function AgeCalculator() {
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{
             borderRadius: "24px",
           }}
@@ -295,7 +296,7 @@ export function AgeCalculator() {
             <div className="mt-6 flex flex-col gap-3 items-center">
               {/* Date of Birth Picker */}
               <div className="flex items-center justify-between w-full">
-                <label className="mr-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
+                <label className="mr-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400 w-28">
                   Date of Birth
                 </label>
                 <Popover>
@@ -329,7 +330,7 @@ export function AgeCalculator() {
 
               {/* Today Date Display */}
               <div className="flex items-center justify-between w-full">
-                <div className="mr-2 flex items-center gap-2">
+                <div className="mr-2 flex items-center gap-2 w-28">
                   <label className="block text-sm font-medium text-gray-400 dark:text-gray-400">
                     Today
                   </label>

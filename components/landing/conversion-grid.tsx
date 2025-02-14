@@ -16,7 +16,7 @@ import { TimeConverter } from '@/components/landing/TimeConverter';
 import TagSearch from '@/components/smart-search';
 import { useState } from 'react';
 import { Option } from '@/components/ui/multiselect';
-import { DateOfBirthCalculator } from "./DateOfBirthCalculator";
+import { YearOfBirthCalculator } from "@/components/landing/YearOfBirthCalculator";
 
 // Define component tags with categories
 const tagCategories = {
@@ -29,97 +29,286 @@ const tagCategories = {
 // Define units and their associated components
 const unitMappings = {
   // Time units
+  milliseconds: 'TimeConverter',
   seconds: 'TimeConverter',
   minutes: 'TimeConverter',
   hours: 'TimeConverter',
   days: 'TimeConverter',
-  
+  weeks: 'TimeConverter',
+
   // Temperature
   celsius: 'TempCalculator',
   fahrenheit: 'TempCalculator',
   kelvin: 'TempCalculator',
-  
+  rankine: 'TempCalculator',
+
   // Length
+  millimeters: 'LengthCalculator',
+  centimeters: 'LengthCalculator',
   meters: 'LengthCalculator',
-  feet: 'LengthCalculator',
+  kilometers: 'LengthCalculator',
   inches: 'LengthCalculator',
-  
+  feet: 'LengthCalculator',
+  yards: 'LengthCalculator',
+  miles: 'LengthCalculator',
+
   // Mass
+  grams: 'MassCalculator',
   kilograms: 'MassCalculator',
+  ounces: 'MassCalculator',
   pounds: 'MassCalculator',
-  
+  stone: 'MassCalculator',
+  tons: 'MassCalculator',
+
   // Data
   bytes: 'DataCalculator',
   kilobytes: 'DataCalculator',
   megabytes: 'DataCalculator',
-  
+  gigabytes: 'DataCalculator',
+  terabytes: 'DataCalculator',
+  petabytes: 'DataCalculator',
+
   // Area
+  'square millimeters': 'AreaCalculator',
+  'square centimeters': 'AreaCalculator',
   'square meters': 'AreaCalculator',
+  'square kilometers': 'AreaCalculator',
+  'square inches': 'AreaCalculator',
   'square feet': 'AreaCalculator',
-  
+  'square yards': 'AreaCalculator',
+  'square miles': 'AreaCalculator',
+
   // Volume
+  milliliters: 'VolumeCalculator',
   liters: 'VolumeCalculator',
+  'cubic centimeters': 'VolumeCalculator',
+  'cubic meters': 'VolumeCalculator',
+  'cubic inches': 'VolumeCalculator',
+  'cubic feet': 'VolumeCalculator',
   gallons: 'VolumeCalculator',
-  
+  quarts: 'VolumeCalculator',
+  pints: 'VolumeCalculator',
+  cups: 'VolumeCalculator',
+
   // Speed
   'meters per second': 'SpeedConverter',
   'kilometers per hour': 'SpeedConverter',
   'miles per hour': 'SpeedConverter',
-  
+  'feet per second': 'SpeedConverter',
+  knots: 'SpeedConverter',
+
   // Date of Birth
-  'birth': 'DateOfBirthCalculator',
-  'age': 'DateOfBirthCalculator',
-  'year': 'DateOfBirthCalculator',
+  birth: 'YearOfBirthCalculator',
+  age: 'AgeCalculator', // Changed from 'YearOfBirthCalculator' to 'AgeCalculator'
+  year: 'YearOfBirthCalculator',
+
+  // Numeral System (new mappings)
+  binary: 'NumeralSystemConverter',
+  hexadecimal: 'NumeralSystemConverter',
+  octal: 'NumeralSystemConverter',
+  decimal: 'NumeralSystemConverter',
+  base2: 'NumeralSystemConverter',
+  base8: 'NumeralSystemConverter',
+  base10: 'NumeralSystemConverter',
+  base16: 'NumeralSystemConverter'
 } as const;
 
 // Add unit variations mapping
 const unitAliases = {
-  // Time
+  // Time aliases
+  'ms': 'milliseconds',
+  'millisecond': 'milliseconds',
+  'milliseconds': 'milliseconds',
   's': 'seconds',
   'sec': 'seconds',
   'second': 'seconds',
-  'm': 'minutes',
+  'seconds': 'seconds',
   'min': 'minutes',
   'minute': 'minutes',
+  'minutes': 'minutes',
   'h': 'hours',
   'hr': 'hours',
   'hour': 'hours',
+  'hours': 'hours',
   'd': 'days',
   'day': 'days',
-  
-  // Temperature
+  'days': 'days',
+  'wk': 'weeks',
+  'wks': 'weeks',
+  'week': 'weeks',
+  'weeks': 'weeks',
+
+  // Temperature aliases
   'c': 'celsius',
-  'fahrenheit': 'fahrenheit',
+  '°c': 'celsius',
+  'celsius': 'celsius',
   'f': 'fahrenheit',
   'fah': 'fahrenheit',
+  '°f': 'fahrenheit',
+  'fahrenheit': 'fahrenheit',
   'k': 'kelvin',
-  
-  // Length
-  'meter': 'meters',
-  'km': 'kilometers',
-  'cm': 'centimeters',
+  'kelvin': 'kelvin',
+  '°r': 'rankine',
+  'rankine': 'rankine',
+
+  // Length aliases
   'mm': 'millimeters',
-  'ft': 'feet',
+  'millimeter': 'millimeters',
+  'millimeters': 'millimeters',
+  'cm': 'centimeters',
+  'centimeter': 'centimeters',
+  'centimeters': 'centimeters',
+  'mtr': 'meters', // Use 'mtr' for meters to avoid conflict with minutes
+  'meter': 'meters',
+  'meters': 'meters',
+  'km': 'kilometers',
+  'kilometer': 'kilometers',
+  'kilometers': 'kilometers',
   'in': 'inches',
+  'inch': 'inches',
+  'inches': 'inches',
+  'ft': 'feet',
+  'foot': 'feet',
+  'feet': 'feet',
+  'yd': 'yards',
+  'yard': 'yards',
+  'yards': 'yards',
   'mi': 'miles',
-  
-  // Mass
-  'kg': 'kilograms',
+  'mile': 'miles',
+  'miles': 'miles',
+
+  // Mass aliases
   'g': 'grams',
+  'gram': 'grams',
+  'grams': 'grams',
+  'kg': 'kilograms',
+  'kilogram': 'kilograms',
+  'kilograms': 'kilograms',
+  'oz': 'ounces',
+  'ounce': 'ounces',
+  'ounces': 'ounces',
   'lb': 'pounds',
   'lbs': 'pounds',
-  'oz': 'ounces',
-  
-  // Data
+  'pound': 'pounds',
+  'pounds': 'pounds',
+  'st': 'stone',
+  'stone': 'stone',
+  'stones': 'stone',
+  'ton': 'tons',
+  'tons': 'tons',
+
+  // Data aliases
+  'b': 'bytes',
+  'byte': 'bytes',
+  'bytes': 'bytes',
   'kb': 'kilobytes',
+  'kilobyte': 'kilobytes',
+  'kilobytes': 'kilobytes',
   'mb': 'megabytes',
+  'megabyte': 'megabytes',
+  'megabytes': 'megabytes',
   'gb': 'gigabytes',
+  'gigabyte': 'gigabytes',
+  'gigabytes': 'gigabytes',
   'tb': 'terabytes',
-  
-  // Date of Birth
+  'terabyte': 'terabytes',
+  'terabytes': 'terabytes',
+  'pb': 'petabytes',
+  'petabyte': 'petabytes',
+  'petabytes': 'petabytes',
+
+  // Area aliases
+  'sq mm': 'square millimeters',
+  'mm²': 'square millimeters',
+  'square millimeter': 'square millimeters',
+  'square millimeters': 'square millimeters',
+  'sq cm': 'square centimeters',
+  'cm²': 'square centimeters',
+  'square centimeter': 'square centimeters',
+  'square centimeters': 'square centimeters',
+  'sq m': 'square meters',
+  'm²': 'square meters',
+  'square meter': 'square meters',
+  'square meters': 'square meters',
+  'sq km': 'square kilometers',
+  'km²': 'square kilometers',
+  'square kilometer': 'square kilometers',
+  'square kilometers': 'square kilometers',
+  'sq in': 'square inches',
+  'in²': 'square inches',
+  'square inch': 'square inches',
+  'square inches': 'square inches',
+  'sq ft': 'square feet',
+  'ft²': 'square feet',
+  'square foot': 'square feet',
+  'square feet': 'square feet',
+  'sq yd': 'square yards',
+  'yd²': 'square yards',
+  'square yard': 'square yards',
+  'square yards': 'square yards',
+  'sq mi': 'square miles',
+  'mi²': 'square miles',
+  'square mile': 'square miles',
+  'square miles': 'square miles',
+
+  // Volume aliases
+  'ml': 'milliliters',
+  'milliliter': 'milliliters',
+  'milliliters': 'milliliters',
+  'l': 'liters',
+  'liter': 'liters',
+  'liters': 'liters',
+  'm³': 'cubic meters',
+  'cubic meter': 'cubic meters',
+  'cubic meters': 'cubic meters',
+  'cm³': 'cubic centimeters',
+  'cubic centimeter': 'cubic centimeters',
+  'cubic centimeters': 'cubic centimeters',
+  'in³': 'cubic inches',
+  'cubic inch': 'cubic inches',
+  'cubic inches': 'cubic inches',
+  'ft³': 'cubic feet',
+  'cubic foot': 'cubic feet',
+  'cubic feet': 'cubic feet',
+  'qt': 'quarts',
+  'quart': 'quarts',
+  'quarts': 'quarts',
+  'pt': 'pints',
+  'pint': 'pints',
+  'pints': 'pints',
+  'cup': 'cups',
+  'cups': 'cups',
+
+  // Speed aliases
+  'm/s': 'meters per second',
+  'meters/second': 'meters per second',
+  'km/h': 'kilometers per hour',
+  'kilometers/hour': 'kilometers per hour',
+  'mph': 'miles per hour',
+  'miles/hour': 'miles per hour',
+  'ft/s': 'feet per second',
+  'fps': 'feet per second',
+  'kn': 'knots',
+  'knot': 'knots',
+  'knots': 'knots',
+
+  // Date of Birth aliases
   'birth': 'birth',
   'born': 'birth',
   'birthday': 'birth',
+  'dob': 'dob',
+  'age': 'age',
+
+  // Numeral System aliases (new)
+  'bin': 'binary',
+  'b2': 'binary',
+  'hex': 'hexadecimal',
+  'oct': 'octal',
+  'dec': 'decimal',
+  'base-2': 'binary',
+  'base-8': 'octal',
+  'base-10': 'decimal',
+  'base-16': 'hexadecimal'
 } as const;
 
 // Create formatted options for the MultipleSelector
@@ -146,7 +335,7 @@ const createTagOptions = () => {
 
 // Define component tags with their categories
 const componentTags = {
-  AgeCalculator: ['calculator', 'personal', 'time', 'date'],
+  AgeCalculator: ['calculator', 'personal', 'time', 'date', 'age'],
   AreaCalculator: ['converter', 'math', 'area', 'metric', 'imperial'],
   BMICalculator: ['calculator', 'health', 'mass', 'length', 'metric', 'imperial'],
   DataCalculator: ['converter', 'tech', 'bytes', 'digital'],
@@ -159,7 +348,7 @@ const componentTags = {
   TempCalculator: ['converter', 'temperature', 'metric', 'imperial'],
   TimeConverter: ['converter', 'time', 'date'],
   VolumeCalculator: ['converter', 'math', 'volume', 'metric', 'imperial'],
-  DateOfBirthCalculator: ['calculator', 'personal', 'time', 'date', 'birth'],
+  YearOfBirthCalculator: ['calculator', 'personal', 'age' ,'time', 'date', 'birth'],
 };
 
 export default function HeroSection() {
@@ -252,9 +441,9 @@ export default function HeroSection() {
           </div>
         )}
 
-        {filterComponents('DateOfBirthCalculator') && (
+        {filterComponents('YearOfBirthCalculator') && (
           <div className="w-full">
-            <DateOfBirthCalculator />
+            <YearOfBirthCalculator />
           </div>
         )}
 

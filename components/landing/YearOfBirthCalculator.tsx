@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { AuroraText } from "@/components/ui/aurora-text";
 import { MorphingDialog, MorphingDialogTrigger, MorphingDialogContent, MorphingDialogTitle, MorphingDialogClose, MorphingDialogContainer } from '@/components/ui/morphing-dialog';
 
-export function DateOfBirthCalculator() {
+export function YearOfBirthCalculator() {
   const [age, setAge] = useState<string>("");
   const [error, setError] = useState<string>("");
 

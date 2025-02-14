@@ -126,6 +126,7 @@ export function VolumeCalculator() {  // Changed from MassCalculator
       </MorphingDialogTrigger>
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{
             borderRadius: "24px",
           }}

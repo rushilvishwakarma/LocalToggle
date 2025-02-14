@@ -1,4 +1,4 @@
-const CACHE_NAME = 'localtoggle-cache-v1';
+const CACHE_NAME = 'tangerine-cache-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
