@@ -81,6 +81,7 @@ export function DateOfBirthCalculator() {
 
       <MorphingDialogContainer>
         <MorphingDialogContent
+          onOpenAutoFocus={(event) => event.preventDefault()}
           style={{ borderRadius: "24px" }}
           className="mx-3 pointer-events-auto relative flex h-auto w-full flex-col overflow-hidden border border-zinc-950/10 bg-white dark:border-zinc-50/10 dark:bg-neutral-950 sm:w-[600px]"
         >
@@ -102,7 +103,6 @@ export function DateOfBirthCalculator() {
               min="0"
               max="130"
               maxLength={3}
-              autoFocus={false}
             />
             {error && (
               <p className="text-red-500 text-sm mb-4">{error}</p>
@@ -113,7 +113,9 @@ export function DateOfBirthCalculator() {
               <AuroraText className="text-3xl font-bold">{birthYear}</AuroraText>
             </div>
           </div>
-          <MorphingDialogClose className="absolute top-6 right-6 text-gray-400 hover:text-gray-50" />
+          <MorphingDialogClose 
+            className="absolute top-6 right-6 text-gray-400 hover:text-gray-50" 
+          />
         </MorphingDialogContent>
       </MorphingDialogContainer>
     </MorphingDialog>
