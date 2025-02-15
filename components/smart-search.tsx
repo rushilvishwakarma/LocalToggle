@@ -609,7 +609,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
       ) : result && (
         <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all relative">
           <ScrollArea className="w-full whitespace-nowrap px-4">
-            <div className="py-10 flex justify-center items-center min-h-[60px] mx-auto">
+            <div className="py-14 mb-3 flex justify-center items-center min-h-[60px] mx-auto">
               {(result.trim().startsWith("$") && result.trim().endsWith("$")) || isComplexFormula(result) ? (
                 <LatexAurora 
                   formula={result}
@@ -624,7 +624,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
             <ScrollBar orientation="horizontal" className="mt-2" />
           </ScrollArea>
           {isGeminiMode && (
-            <div className="absolute bottom-2 right-2">
+            <div className="absolute bottom-2 left-2">
                   <Badge variant="outline" className="gap-1.5">
                    <span className="size-1.5 rounded-full bg-amber-500" aria-hidden="true"></span>
                     Caution: AI can make Mistakes

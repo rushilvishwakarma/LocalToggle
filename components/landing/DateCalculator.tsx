@@ -103,15 +103,15 @@ export function DateCalculator() {
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
                 <p className="text-sm font-medium text-gray-400 mb-1">Years</p>
-                <AuroraText className="text-3xl font-bold">{`${yearsDiff}`}</AuroraText>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${yearsDiff}`}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
                 <p className="text-sm font-medium text-gray-400 mb-1">Months</p>
-                <AuroraText className="text-3xl font-bold">{`${monthsDiff}`}</AuroraText>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${monthsDiff}`}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
                 <p className="text-sm font-medium text-gray-400 mb-1">Days</p>
-                <AuroraText className="text-3xl font-bold">{`${daysDiff}`}</AuroraText>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${daysDiff}`}</AuroraText>
               </div>
             </div>
           </div>
