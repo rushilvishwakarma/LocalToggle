@@ -244,6 +244,33 @@ export function AgeCalculator() {
   const ageMinutes = safeBirthDate ? differenceInMinutes(currentTime, safeBirthDate) : 0;
   const ageSeconds = safeBirthDate ? differenceInSeconds(currentTime, safeBirthDate) : 0;
 
+  // Add this function before the return statement
+  const shouldShowSummary = () => {
+    if (!birthDate) return false;
+    
+    // Check if the numbers would be too large
+    const totalSeconds = ageSeconds;
+    const totalMinutes = ageMinutes;
+    const totalHours = ageHours;
+    const totalWeeks = Math.floor((ageYears * 365.25 + ageMonths * 30.44 + ageDays) / 7);
+    
+    // Check if any value exceeds safe integer limits or might cause display issues
+    if (
+      totalSeconds > Number.MAX_SAFE_INTEGER ||
+      totalMinutes > Number.MAX_SAFE_INTEGER ||
+      totalHours > Number.MAX_SAFE_INTEGER ||
+      totalWeeks > Number.MAX_SAFE_INTEGER ||
+      !Number.isFinite(totalSeconds) ||
+      !Number.isFinite(totalMinutes) ||
+      !Number.isFinite(totalHours) ||
+      !Number.isFinite(totalWeeks)
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <MorphingDialog
       transition={{
@@ -431,7 +458,7 @@ export function AgeCalculator() {
                 </div>
               </div>
 
-              {birthDate && (
+              {birthDate && shouldShowSummary() && (
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="age" className="border-transparent">
                     <AccordionTrigger className="text-lg font-medium text-gray-50 no-underline hover:no-underline focus:no-underline">

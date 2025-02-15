@@ -7,6 +7,16 @@ import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Hook to detect mobile devices
+function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const mobileCheck = /Mobi|Android/i.test(navigator.userAgent);
+    setIsMobile(mobileCheck);
+  }, []);
+  return isMobile;
+}
+
 // Hook to detect prefers-reduced-motion setting
 function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
@@ -15,11 +25,21 @@ function usePrefersReducedMotion() {
     setPrefersReducedMotion(mediaQuery.matches);
     const handler = () => setPrefersReducedMotion(mediaQuery.matches);
     mediaQuery.addEventListener("change", handler);
-    return () => {
-      mediaQuery.removeEventListener("change", handler);
-    };
+    return () => mediaQuery.removeEventListener("change", handler);
   }, []);
   return prefersReducedMotion;
+}
+
+// Centralized animation props based on reduced motion setting
+function useAnimationProps() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+  return React.useMemo(
+    () =>
+      prefersReducedMotion
+        ? {}
+        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
+    [prefersReducedMotion]
+  );
 }
 
 const DEFAULT_TRANSITION = { type: "spring", duration: 0.5, bounce: 0 };
@@ -46,15 +66,12 @@ export type MorphingDialogProviderProps = {
   transition?: typeof DEFAULT_TRANSITION;
 };
 
-function MorphingDialogProvider({ children, transition }: MorphingDialogProviderProps) {
+function MorphingDialogProvider({ children }: MorphingDialogProviderProps) {
   const [isOpen, setIsOpen] = React.useState(false);
   const uniqueId = React.useId();
   const triggerRef = React.useRef<HTMLDivElement>(null);
 
-  const contextValue = React.useMemo(
-    () => ({ isOpen, setIsOpen, uniqueId, triggerRef }),
-    [isOpen, uniqueId]
-  );
+  const contextValue = React.useMemo(() => ({ isOpen, setIsOpen, uniqueId, triggerRef }), [isOpen, uniqueId]);
 
   return (
     <MorphingDialogContext.Provider value={contextValue}>
@@ -68,12 +85,8 @@ export type MorphingDialogProps = {
   transition?: typeof DEFAULT_TRANSITION;
 };
 
-function MorphingDialog({ children, transition }: MorphingDialogProps) {
-  return (
-    <MorphingDialogProvider transition={transition}>
-      {children}
-    </MorphingDialogProvider>
-  );
+function MorphingDialog({ children }: MorphingDialogProps) {
+  return <MorphingDialogProvider>{children}</MorphingDialogProvider>;
 }
 
 export type MorphingDialogTriggerProps = {
@@ -84,18 +97,10 @@ export type MorphingDialogTriggerProps = {
 
 function MorphingDialogTrigger({ children, className, style }: MorphingDialogTriggerProps) {
   const { setIsOpen, isOpen, uniqueId, triggerRef } = useMorphingDialog();
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const animationProps = useAnimationProps();
   const [isVisible, setIsVisible] = React.useState(true);
 
-  const animationProps = React.useMemo(
-    () =>
-      prefersReducedMotion
-        ? {}
-        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
-    [prefersReducedMotion]
-  );
-
-  const handleClick = React.useCallback(() => {
+  const toggleDialog = React.useCallback(() => {
     setIsOpen((prev) => {
       if (!prev) setIsVisible(false);
       return !prev;
@@ -106,20 +111,13 @@ function MorphingDialogTrigger({ children, className, style }: MorphingDialogTri
     (event: React.KeyboardEvent) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        setIsOpen((prev) => {
-          if (!prev) setIsVisible(false);
-          return !prev;
-        });
+        toggleDialog();
       }
     },
-    [setIsOpen]
+    [toggleDialog]
   );
 
   const handleMouseEnter = React.useCallback(() => {
-    if (!isOpen) setIsVisible(true);
-  }, [isOpen]);
-
-  const handleAnimationComplete = React.useCallback(() => {
     if (!isOpen) setIsVisible(true);
   }, [isOpen]);
 
@@ -132,10 +130,10 @@ function MorphingDialogTrigger({ children, className, style }: MorphingDialogTri
       ref={triggerRef}
       layoutId={`dialog-${uniqueId}`}
       className={cn("relative cursor-pointer", className, { invisible: !isVisible })}
-      onClick={handleClick}
+      onClick={toggleDialog}
       onKeyDown={handleKeyDown}
       onMouseEnter={handleMouseEnter}
-      onAnimationComplete={handleAnimationComplete}
+      onAnimationComplete={() => !isOpen && setIsVisible(true)}
       style={{ ...style, willChange: "transform, opacity" }}
       role="button"
       aria-haspopup="dialog"
@@ -159,36 +157,21 @@ export type MorphingDialogContentProps = {
 
 function MorphingDialogContent({ children, className, style, onOpenAutoFocus }: MorphingDialogContentProps) {
   const { setIsOpen, isOpen, uniqueId, triggerRef } = useMorphingDialog();
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const animationProps = useAnimationProps();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [firstFocusableElement, setFirstFocusableElement] = React.useState<HTMLElement | null>(null);
   const [lastFocusableElement, setLastFocusableElement] = React.useState<HTMLElement | null>(null);
 
-  const animationProps = React.useMemo(
-    () =>
-      prefersReducedMotion
-        ? {}
-        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
-    [prefersReducedMotion]
-  );
-
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsOpen(false);
-      }
-      if (event.key === "Tab") {
-        if (!firstFocusableElement || !lastFocusableElement) return;
-        if (event.shiftKey) {
-          if (document.activeElement === firstFocusableElement) {
-            event.preventDefault();
-            lastFocusableElement.focus();
-          }
-        } else {
-          if (document.activeElement === lastFocusableElement) {
-            event.preventDefault();
-            firstFocusableElement.focus();
-          }
+      if (event.key === "Escape") setIsOpen(false);
+      if (event.key === "Tab" && firstFocusableElement && lastFocusableElement) {
+        if (event.shiftKey && document.activeElement === firstFocusableElement) {
+          event.preventDefault();
+          lastFocusableElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastFocusableElement) {
+          event.preventDefault();
+          firstFocusableElement.focus();
         }
       }
     };
@@ -211,13 +194,13 @@ function MorphingDialogContent({ children, className, style, onOpenAutoFocus }: 
         if (syntheticEvent.defaultPrevented) return;
       }
 
-      const focusableElements = containerRef.current?.querySelectorAll(
+      const focusable = containerRef.current?.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      if (focusableElements && focusableElements.length > 0) {
-        setFirstFocusableElement(focusableElements[0] as HTMLElement);
-        setLastFocusableElement(focusableElements[focusableElements.length - 1] as HTMLElement);
-        (focusableElements[0] as HTMLElement).focus();
+      if (focusable && focusable.length > 0) {
+        setFirstFocusableElement(focusable[0] as HTMLElement);
+        setLastFocusableElement(focusable[focusable.length - 1] as HTMLElement);
+        (focusable[0] as HTMLElement).focus();
       }
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -252,16 +235,8 @@ export type MorphingDialogContainerProps = {
 
 function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
   const { isOpen, uniqueId } = useMorphingDialog();
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const animationProps = useAnimationProps();
   const [mounted, setMounted] = React.useState(false);
-
-  const animationProps = React.useMemo(
-    () =>
-      prefersReducedMotion
-        ? {}
-        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
-    [prefersReducedMotion]
-  );
 
   React.useEffect(() => {
     setMounted(true);
@@ -408,3 +383,33 @@ export {
   MorphingDialogDescription,
   MorphingDialogImage,
 };
+
+// Demo usage component that conditionally passes onOpenAutoFocus only on mobile devices
+function MyDialogComponent() {
+  const isMobile = useIsMobile();
+
+  return (
+    <MorphingDialog>
+      <MorphingDialogTrigger>
+        Open Dialog
+      </MorphingDialogTrigger>
+      <MorphingDialogContainer>
+        <MorphingDialogContent
+          // onOpenAutoFocus is only provided on mobile devices
+          onOpenAutoFocus={isMobile ? (event) => event.preventDefault() : undefined}
+        >
+          <div style={{ padding: "20px", color: "#fff" }}>
+            <MorphingDialogTitle>Dialog Title</MorphingDialogTitle>
+            <MorphingDialogSubtitle>Dialog Subtitle</MorphingDialogSubtitle>
+            <MorphingDialogDescription>
+              This is the dialog content. The autofocus behavior is prevented only on mobile devices.
+            </MorphingDialogDescription>
+            <MorphingDialogClose />
+          </div>
+        </MorphingDialogContent>
+      </MorphingDialogContainer>
+    </MorphingDialog>
+  );
+}
+
+export default MyDialogComponent;

@@ -35,6 +35,14 @@ function convertSpeed(value: number, fromUnit: string, toUnit: string): number {
   return (value * fromFactor) / toFactor;
 }
 
+// Add this function before the SpeedConverter component
+function formatNumber(num: number): string {
+  if (Math.abs(num) < 0.000001) return '0';
+  if (Math.abs(num) >= 1000000) return num.toExponential(2);
+  if (Math.abs(num) < 0.01) return num.toExponential(2);
+  return num.toFixed(Math.abs(num) < 1 ? 4 : 2);
+}
+
 export function SpeedConverter() {
   const [inputValue, setInputValue] = useState<string>("");  // Changed from "0" to ""
   const [fromUnit, setFromUnit] = useState<string>("m/s");
@@ -44,7 +52,7 @@ export function SpeedConverter() {
   useEffect(() => {
     const numValue = parseFloat(inputValue) || 0;
     const result = convertSpeed(numValue, fromUnit, toUnit);
-    setConvertedValue(result.toFixed(6));
+    setConvertedValue(formatNumber(result));
   }, [inputValue, fromUnit, toUnit]);
 
   const handleSwapUnits = () => {

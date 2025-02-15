@@ -24,20 +24,69 @@ const systems = [
   { name: "Hexadecimal", base: 16, prefix: "HEX", notation: "0–F" }
 ];
 
+// Add this constant after the systems array
+const MAX_INPUT_LENGTH = 16;
+
+function formatWithSpaces(str: string): string {
+  const parts = str.split('.');
+  const integerPart = parts[0].replace(/\B(?=(\d{4})+(?!\d))/g, ' ');
+  return parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+}
+
 function convertNumber(value: string, fromBase: number, toBase: number): string {
   try {
-    const decimal = parseInt(value, fromBase);
-    if (isNaN(decimal)) return '0';
-    return decimal.toString(toBase);
+    if (!value) return '0';
+    
+    const [intPart, fracPart] = value.split('.');
+    
+    // Convert integer part to decimal
+    const intDecimal = intPart ? parseInt(intPart, fromBase) : 0;
+    if (isNaN(intDecimal)) return '0';
+    
+    // Handle fractional part if exists
+    let fracDecimal = 0;
+    if (fracPart) {
+      for (let i = 0; i < fracPart.length; i++) {
+        const digit = parseInt(fracPart[i], fromBase);
+        if (isNaN(digit)) continue;
+        fracDecimal += digit * Math.pow(fromBase, -(i + 1));
+      }
+    }
+    
+    const totalDecimal = intDecimal + fracDecimal;
+    
+    // Convert to target base
+    if (toBase === 10) {
+      return totalDecimal.toString();
+    }
+    
+    // Handle integer part conversion
+    const resultIntPart = Math.floor(totalDecimal).toString(toBase);
+    
+    // Handle fractional part conversion
+    let fracResult = '';
+    let remainingFrac = totalDecimal % 1;
+    const maxPrecision = 8;
+    
+    while (remainingFrac > 0 && fracResult.length < maxPrecision) {
+      remainingFrac *= toBase;
+      const digit = Math.floor(remainingFrac);
+      fracResult += digit.toString(toBase);
+      remainingFrac -= digit;
+    }
+    
+    return fracResult ? `${resultIntPart}.${fracResult}` : resultIntPart;
   } catch (error) {
     return '0';
   }
 }
 
-// Add this function before the NumeralSystemConverter component
 function calculateBits(value: string): number {
   if (!value || value === '0') return 0;
-  return value.toString().replace(/^0+/, '').length;
+  const [intPart, fracPart] = value.split('.');
+  const intBits = intPart.replace(/^0+/, '').length;
+  const fracBits = fracPart ? fracPart.length : 0;
+  return intBits + (fracPart ? fracBits + 1 : 0); // +1 for decimal point
 }
 
 export function NumeralSystemConverter() {
@@ -66,10 +115,18 @@ export function NumeralSystemConverter() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const fromBase = systems.find(s => s.name === fromSystem)?.base || 10;
-    const validRegex = fromBase === 2 ? /^[01]*$/ :
-                      fromBase === 8 ? /^[0-7]*$/ :
-                      fromBase === 16 ? /^[0-9A-Fa-f]*$/ :
-                      /^[0-9]*$/;
+    
+    // Check input length
+    if (value.length > MAX_INPUT_LENGTH) return;
+    
+    // Updated regex patterns to properly handle decimal points
+    const validRegex = fromBase === 2 ? /^[01]*\.?[01]*$/ :
+                      fromBase === 8 ? /^[0-7]*\.?[0-7]*$/ :
+                      fromBase === 16 ? /^[0-9A-Fa-f]*\.?[0-9A-Fa-f]*$/ :
+                      /^[0-9]*\.?[0-9]*$/;
+    
+    // Prevent multiple decimal points
+    if ((value.match(/\./g) || []).length > 1) return;
     
     if (validRegex.test(value) || value === '') {
       setInputValue(value);
@@ -214,16 +271,17 @@ export function NumeralSystemConverter() {
                 <Input
                   type="text"
                   inputMode="numeric"
-                  placeholder="Enter number"
+                  placeholder={`Enter number`}
                   value={inputValue}
                   onChange={handleInputChange}
                   className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"
+                  maxLength={MAX_INPUT_LENGTH}
                 />
               </div>
 
               <div className="mt-4 mb-10 text-center">
                 <AuroraText className="text-3xl font-bold">
-                  {convertedValue}
+                  {formatWithSpaces(convertedValue)}
                 </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toSystem} ({systems.find(s => s.name === toSystem)?.prefix})
