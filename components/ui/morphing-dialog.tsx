@@ -87,9 +87,13 @@ function MorphingDialogTrigger({ children, className, style }: MorphingDialogTri
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isVisible, setIsVisible] = React.useState(true);
 
-  const animationProps = prefersReducedMotion
-    ? {}
-    : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } };
+  const animationProps = React.useMemo(
+    () =>
+      prefersReducedMotion
+        ? {}
+        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
+    [prefersReducedMotion]
+  );
 
   const handleClick = React.useCallback(() => {
     setIsOpen((prev) => {
@@ -132,7 +136,7 @@ function MorphingDialogTrigger({ children, className, style }: MorphingDialogTri
       onKeyDown={handleKeyDown}
       onMouseEnter={handleMouseEnter}
       onAnimationComplete={handleAnimationComplete}
-      style={style}
+      style={{ ...style, willChange: "transform, opacity" }}
       role="button"
       aria-haspopup="dialog"
       aria-expanded={isOpen}
@@ -150,28 +154,23 @@ export type MorphingDialogContentProps = {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  /**
-   * Callback invoked when the dialog is opened.
-   * If event.preventDefault() is called, the default auto-focus behavior is skipped.
-   */
   onOpenAutoFocus?: (event: { defaultPrevented: boolean; preventDefault: () => void }) => void;
 };
 
-function MorphingDialogContent({
-  children,
-  className,
-  style,
-  onOpenAutoFocus,
-}: MorphingDialogContentProps) {
+function MorphingDialogContent({ children, className, style, onOpenAutoFocus }: MorphingDialogContentProps) {
   const { setIsOpen, isOpen, uniqueId, triggerRef } = useMorphingDialog();
   const prefersReducedMotion = usePrefersReducedMotion();
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [firstFocusableElement, setFirstFocusableElement] = React.useState<HTMLElement | null>(null);
   const [lastFocusableElement, setLastFocusableElement] = React.useState<HTMLElement | null>(null);
 
-  const animationProps = prefersReducedMotion
-    ? {}
-    : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } };
+  const animationProps = React.useMemo(
+    () =>
+      prefersReducedMotion
+        ? {}
+        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
+    [prefersReducedMotion]
+  );
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -201,7 +200,6 @@ function MorphingDialogContent({
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
 
-      // Create a synthetic event for onOpenAutoFocus
       if (onOpenAutoFocus) {
         const syntheticEvent = {
           defaultPrevented: false,
@@ -210,9 +208,7 @@ function MorphingDialogContent({
           },
         };
         onOpenAutoFocus(syntheticEvent);
-        if (syntheticEvent.defaultPrevented) {
-          return; // Skip auto-focus if prevented
-        }
+        if (syntheticEvent.defaultPrevented) return;
       }
 
       const focusableElements = containerRef.current?.querySelectorAll(
@@ -235,7 +231,7 @@ function MorphingDialogContent({
       ref={containerRef}
       layoutId={`dialog-${uniqueId}`}
       className={cn("overflow-hidden border border-zinc-950/10 bg-[#080a0a]", className)}
-      style={style}
+      style={{ ...style, willChange: "transform, opacity" }}
       role="dialog"
       aria-modal="true"
       aria-labelledby={`motion-ui-morphing-dialog-title-${uniqueId}`}
@@ -259,9 +255,13 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [mounted, setMounted] = React.useState(false);
 
-  const animationProps = prefersReducedMotion
-    ? {}
-    : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } };
+  const animationProps = React.useMemo(
+    () =>
+      prefersReducedMotion
+        ? {}
+        : { initial: { opacity: 0, scale: 0.9 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.9 } },
+    [prefersReducedMotion]
+  );
 
   React.useEffect(() => {
     setMounted(true);
@@ -281,8 +281,13 @@ function MorphingDialogContainer({ children }: MorphingDialogContainerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
+            style={{ willChange: "opacity" }}
           />
-          <motion.div className="fixed inset-0 z-50 flex items-center justify-center" {...animationProps}>
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            {...animationProps}
+            style={{ willChange: "transform, opacity" }}
+          >
             {children}
           </motion.div>
         </>
@@ -299,11 +304,7 @@ export type MorphingDialogTitleProps = {
 };
 
 function MorphingDialogTitle({ children, className, style }: MorphingDialogTitleProps) {
-  return (
-    <div className={className} style={style}>
-      {children}
-    </div>
-  );
+  return <div className={className} style={style}>{children}</div>;
 }
 
 export type MorphingDialogSubtitleProps = {

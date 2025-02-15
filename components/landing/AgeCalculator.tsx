@@ -442,7 +442,7 @@ export function AgeCalculator() {
                         <div className="grid grid-cols-3 gap-y-4 text-center">
                           <div>
                             <p className="text-lg text-gray-50">Years</p>
-                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}> 
                               {`${ageYears}`}
                             </AuroraText>
                           </div>
