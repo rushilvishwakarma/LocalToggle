@@ -10,6 +10,19 @@ import {
 import type { ElementType } from "react"
 import { cn } from "@/lib/utils"
 
+// Custom hook to detect small devices (sm: max-width: 640px)
+function useIsSmallDevice(threshold: number = 640) {
+  const [isSmall, setIsSmall] = React.useState(false)
+  React.useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${threshold}px)`)
+    setIsSmall(mq.matches)
+    const handleChange = (e: MediaQueryListEvent) => setIsSmall(e.matches)
+    mq.addEventListener("change", handleChange)
+    return () => mq.removeEventListener("change", handleChange)
+  }, [threshold])
+  return isSmall
+}
+
 type AnimationType = "text" | "word" | "character" | "line"
 
 interface AuroraTextProps extends MotionProps {
@@ -101,10 +114,15 @@ export function AuroraText({
   viewport,
   ...props
 }: AuroraTextProps) {
+  // Determine if the current device is small (e.g. "sm")
+  const isSmallDevice = useIsSmallDevice()
+  // If either the disableAnimation prop is true or we are on a small device, disable animations
+  const shouldDisableAnimation = disableAnimation || isSmallDevice
+
   const MotionComponent = motion(Component)
   const isString = typeof children === "string"
 
-  // Always compute segments, regardless of children type
+  // Compute segments
   const segments = React.useMemo(() => {
     if (!isString) return [children]
     switch (by) {
@@ -142,7 +160,7 @@ export function AuroraText({
     return segments.map((segment, i) => (
       <motion.span
         key={`${by}-${segment}-${i}`}
-        {...(!disableAnimation && {
+        {...(!shouldDisableAnimation && {
           variants: finalVariants.item,
           custom: i * staggerTimings[by],
         })}
@@ -155,12 +173,12 @@ export function AuroraText({
         {segment}
       </motion.span>
     ))
-  }, [segments, by, disableAnimation, segmentClassName, finalVariants, children, isString])
+  }, [segments, by, shouldDisableAnimation, segmentClassName, finalVariants, children, isString])
 
   return (
     <AnimatePresence mode="wait">
       <MotionComponent
-        {...(!disableAnimation && {
+        {...(!shouldDisableAnimation && {
           variants: finalVariants.container,
           initial: "hidden",
           whileInView: startOnView ? "show" : undefined,
