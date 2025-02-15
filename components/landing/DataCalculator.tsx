@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { AuroraText } from "@/components/ui/aurora-text";
+import SwapButton from "@/components/ui/swap-button";
 
 const units = [
   { name: "Bytes", symbol: "B" },
@@ -184,12 +185,12 @@ export function DataCalculator() {
                 </div>
 
                 {/* Swap Button */}
-                <div className="py-2 sm:pt-5">
-                <Button 
-                variant="ghost"
-                onClick={handleSwapUnits} className="p-2">
-                  <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5" />
-                </Button>
+                <div className="py-2 sm:pt-9 px-3">
+                  <SwapButton 
+                    isVertical={true}
+                    onClick={handleSwapUnits}
+                    className="rotate-0 sm:rotate-90"
+                  />
                 </div>
                 <div className="flex flex-col w-full">
                   <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">

@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { AuroraText } from "@/components/ui/aurora-text";
-
+import SwapButton from "@/components/ui/swap-button";
 const units = [
   { name: "Celsius", symbol: "°C" },
   { name: "Fahrenheit", symbol: "°F" },
@@ -191,12 +191,12 @@ export function TempCalculator() {
                 </div>
 
                 {/* Swap Button */}
-                <div className="pt-5">
-                <Button 
-                variant="ghost"
-                onClick={handleSwapUnits} className="my-2">
-                  <ArrowUpDown className="w-5 h-5" />
-                </Button>
+                <div className="flex justify-center w-full sm:w-auto py-2 sm:pt-9 px-3">
+                  <SwapButton 
+                    isVertical={true}
+                    onClick={handleSwapUnits}
+                    className="rotate-0 sm:rotate-90"
+                  />
                 </div>
                 <div className="flex flex-col w-full">
                   <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">

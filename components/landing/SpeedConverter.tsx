@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/morphing-dialog';
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { AuroraText } from "@/components/ui/aurora-text";
+import SwapButton from "@/components/ui/swap-button";
 
 const speedUnits = [
   { name: "Light Speed", symbol: "c", factor: 299792458 },
@@ -150,14 +151,12 @@ export function SpeedConverter() {
                 </div>
 
                 {/* Swap Button */}
-                <div className="flex justify-center w-full sm:w-auto py-2 sm:pt-5">
-                  <Button 
-                    variant="ghost"
+                <div className="flex justify-center w-full sm:w-auto py-2 sm:pt-9 px-3">
+                  <SwapButton 
+                    isVertical={true}
                     onClick={handleSwapUnits}
-                    className="rotate-90 sm:rotate-0"
-                  >
-                    <ArrowUpDown className="w-5 h-5" />
-                  </Button>
+                    className="rotate-0 sm:rotate-90"
+                  />
                 </div>
 
                 <div className="flex flex-col w-full">
