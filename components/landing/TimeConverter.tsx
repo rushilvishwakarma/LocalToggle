@@ -280,7 +280,7 @@ export function TimeConverter() {
               {/* Converted Value */}
               <div className="mt-4 mb-4 text-center">
                 <AuroraText className="text-3xl font-bold">
-                  {convertedValue} {getUnitSymbol(toUnit)}
+                  {`${convertedValue} ${getUnitSymbol(toUnit)}`}
                 </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toUnit}

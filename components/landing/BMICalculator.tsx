@@ -246,7 +246,7 @@ export function BMICalculator() {
               {/* BMI Result */}
               <div className="mt-4 mb-4 text-center">
                 <AuroraText className="text-3xl font-bold">
-                  BMI: {bmi}
+                  {`BMI: ${bmi}`}
                 </AuroraText>
                 <p className="pt-2 text-sm font-semibold tracking-wide text-gray-50/90">
                   {weightValue && heightValue ? getBMICategory(bmi) : "Body mass index"}

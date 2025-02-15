@@ -40,7 +40,7 @@ import {
   MorphingDialogClose,
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog';
-import { AuroraText } from "@/components/ui/aurora-text"
+import { AuroraText } from "@/components/ui/aurora-text";
 
 export function AgeCalculator() {
   const defaultTime = "12:00:00 AM";
@@ -402,8 +402,8 @@ export function AgeCalculator() {
                 <div className="bg-neutral-950 dark:bg-neutral-900 rounded-l-3xl rounded-r-md p-6 text-center flex flex-col justify-between">
                   <p className="text-3xl font-medium text-gray-50">Age</p>
                   <div className="mt-4">
-                    <AuroraText className="text-6xl font-bold">
-                      {birthDate ? ageYears : ' '}
+                    <AuroraText className="text-6xl font-bold" disableAnimation={true}>
+                      {birthDate ? `${ageYears}` : ' '}
                     </AuroraText>
                     <span className="text-sm font-normal text-gray-50">
                       {birthDate ? " years" : " years"}
@@ -416,7 +416,9 @@ export function AgeCalculator() {
 
                 {/* Next Birthday Section */}
                 <div className="bg-neutral-950 dark:bg-neutral-900 rounded-r-3xl rounded-l-md p-6 text-center flex flex-col justify-between">
-                  <AuroraText className="w-full justify-center text-lg font-medium">Next Birthday</AuroraText>
+                  <AuroraText className="w-full justify-center text-lg font-medium" disableAnimation={true}>
+                    Next Birthday
+                  </AuroraText>
                   <div className="flex flex-col items-center mt-4">
                     <CakeIcon className="w-7 h-7 mb-2" />
                     <p className="text-2xl font-bold text-gray-50">
@@ -440,29 +442,39 @@ export function AgeCalculator() {
                         <div className="grid grid-cols-3 gap-y-4 text-center">
                           <div>
                             <p className="text-lg text-gray-50">Years</p>
-                            <AuroraText className="text-sm font-bold">{ageYears}</AuroraText>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${ageYears}`}
+                            </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Months</p>
-                            <AuroraText className="text-sm font-bold">{ageYears * 12 + ageMonths}</AuroraText>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${ageYears * 12 + ageMonths}`}
+                            </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Weeks</p>
-                            <AuroraText className="text-sm font-bold">
-                              {Math.floor((ageYears * 365.25 + ageMonths * 30.44 + ageDays) / 7)}
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${Math.floor((ageYears * 365.25 + ageMonths * 30.44 + ageDays) / 7)}`}
                             </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Hours</p>
-                            <AuroraText className="text-sm font-bold">{ageHours}</AuroraText>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${ageHours}`}
+                            </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Minutes</p>
-                            <AuroraText className="text-sm font-bold">{ageMinutes}</AuroraText>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${ageMinutes}`}
+                            </AuroraText>
                           </div>
                           <div>
                             <p className="text-lg text-gray-50">Seconds</p>
-                            <AuroraText className="text-sm font-bold">{ageSeconds}</AuroraText>
+                            <AuroraText className="text-sm font-bold" disableAnimation={true}>
+                              {`${ageSeconds}`}
+                            </AuroraText>
                           </div>
                         </div>
                       </div>

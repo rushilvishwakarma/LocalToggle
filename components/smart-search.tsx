@@ -524,15 +524,11 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
 
   const handleInputChange = (value: string) => {
     setInputValue(value);
-    if (isGeminiMode) {
-      // If in AI mode, don't filter cards
-      setResult(null);
-      setIsGeminiMode(false);
-    }
-    
     if (!value || !value.trim()) {
       onSearch('');
       if (onQueryChange) onQueryChange('');
+      setResult(null); // Clear result when input is empty
+      setIsGeminiMode(false); // Reset Gemini mode
       return;
     }
 

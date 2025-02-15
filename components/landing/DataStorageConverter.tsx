@@ -249,7 +249,7 @@ export function DataCalculator() {
               {/* Converted Value */}
               <div className="mt-4 mb-4 text-center w-full">
                 <AuroraText className="text-2xl sm:text-3xl font-bold break-words">
-                  {convertedValue} {getUnitSymbol(toUnit)}
+                  {`${convertedValue} ${getUnitSymbol(toUnit)}`}
                 </AuroraText>
                 <p className="pt-2 text-sm font-normal text-gray-50">
                   {toUnit}
