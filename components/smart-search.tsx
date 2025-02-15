@@ -616,7 +616,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
                   className="font-bold tracking-wide text-xl"
                 />
               ) : (
-                <AuroraText className="font-bold tracking-wide text-6xl py-2">
+                <AuroraText className="font-bold tracking-wide text-4xl sm:text-5xl py-2">
                   {result}
                 </AuroraText>
               )}

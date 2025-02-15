@@ -1,61 +1,34 @@
 "use client"
 
+import React from "react"
 import {
   AnimatePresence,
   type MotionProps,
   type Variants,
   motion,
-} from "motion/react"
+} from "framer-motion"
 import type { ElementType } from "react"
-import { cn } from '@/lib/utils'
-import * as React from "react";
+import { cn } from "@/lib/utils"
 
 type AnimationType = "text" | "word" | "character" | "line"
 
 interface AuroraTextProps extends MotionProps {
-  /**
-   * The text content to animate or any React node.
-   */
   children: React.ReactNode
-  /**
-   * The class name to be applied to the container
-   */
   className?: string
-  /**
-   * The class name to be applied to each segment
-   */
   segmentClassName?: string
-  /**
-   * The delay before the animation starts
-   */
   delay?: number
-  /**
-   * The duration of the animation
-   */
   duration?: number
-  /**
-   * The element type to render
-   */
   as?: ElementType
-  /**
-   * How to split the text ("text", "word", "character", "line")
-   */
   by?: AnimationType
-  /**
-   * Whether to start animation when component enters viewport
-   */
   startOnView?: boolean
-  /**
-   * Whether to animate only once
-   */
   once?: boolean
-  /**
-   * If true, disable the animation (text appears instantly)
-   */
   disableAnimation?: boolean
+  viewport?: {
+    once?: boolean
+    margin?: string
+  }
 }
 
-// Same stagger timings as before:
 const staggerTimings: Record<AnimationType, number> = {
   text: 0.06,
   word: 0.05,
@@ -67,16 +40,11 @@ const defaultContainerVariants = {
   hidden: { opacity: 1 },
   show: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
+    transition: { staggerChildren: 0.05 },
   },
   exit: {
     opacity: 0,
-    transition: {
-      staggerChildren: 0.05,
-      staggerDirection: -1,
-    },
+    transition: { staggerChildren: 0.05, staggerDirection: -1 },
   },
 }
 
@@ -130,46 +98,29 @@ export function AuroraText({
   once = false,
   by = "word",
   disableAnimation = false,
+  viewport,
   ...props
 }: AuroraTextProps) {
-  const MotionComponent = motion.create(Component)
+  const MotionComponent = motion(Component)
+  const isString = typeof children === "string"
 
-  // If children is not a string, render it directly without text splitting animation.
-  if (typeof children !== "string") {
-    return (
-      <MotionComponent
-        className={cn("whitespace-pre-wrap relative inline-flex", className)}
-        {...props}
-      >
-        {children}
-        {/* Aurora Overlay */}
-        <span className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-lighten dark:mix-blend-darken">
-          <span className="pointer-events-none absolute -top-1/2 h-[30vw] w-[30vw] animate-[aurora-border_6s_ease-in-out_infinite,aurora-1_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-1))] mix-blend-overlay blur-[1rem]" />
-          <span className="pointer-events-none absolute right-0 top-0 h-[30vw] w-[30vw] animate-[aurora-border_6s_ease-in-out_infinite,aurora-2_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-2))] mix-blend-overlay blur-[1rem]" />
-          <span className="pointer-events-none absolute bottom-0 left-0 h-[30vw] w-[30vw] animate-[aurora-border_6s_ease-in-out_infinite,aurora-3_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-3))] mix-blend-overlay blur-[1rem]" />
-          <span className="pointer-events-none absolute -bottom-1/2 right-0 h-[30vw] w-[30vw] animate-[aurora-border_6s_ease-in-out_infinite,aurora-4_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-4))] mix-blend-overlay blur-[1rem]" />
-        </span>
-      </MotionComponent>
-    )
-  }
-
-  // Memoize the text splitting into segments.
+  // Always compute segments, regardless of children type
   const segments = React.useMemo(() => {
-    const text = children
+    if (!isString) return [children]
     switch (by) {
       case "word":
-        return text.split(/(\s+)/)
+        return children.split(/(\s+)/)
       case "character":
-        return text.split("")
+        return children.split("")
       case "line":
-        return text.split("\n")
+        return children.split("\n")
       case "text":
       default:
-        return [text]
+        return [children]
     }
-  }, [children, by])
+  }, [children, by, isString])
 
-  // Memoize final variants based on the "by" prop.
+  // Memoize final variants
   const finalVariants = React.useMemo(() => ({
     container: {
       ...defaultItemAnimationVariants.blurInUp.container,
@@ -185,8 +136,9 @@ export function AuroraText({
     item: defaultItemAnimationVariants.blurInUp.item,
   }), [by])
 
-  // Memoize the rendered segments.
+  // Memoize rendered segments
   const renderedSegments = React.useMemo(() => {
+    if (!isString) return children
     return segments.map((segment, i) => (
       <motion.span
         key={`${by}-${segment}-${i}`}
@@ -203,10 +155,10 @@ export function AuroraText({
         {segment}
       </motion.span>
     ))
-  }, [segments, by, disableAnimation, segmentClassName, finalVariants])
+  }, [segments, by, disableAnimation, segmentClassName, finalVariants, children, isString])
 
   return (
-    <AnimatePresence mode="popLayout">
+    <AnimatePresence mode="wait">
       <MotionComponent
         {...(!disableAnimation && {
           variants: finalVariants.container,
@@ -214,13 +166,16 @@ export function AuroraText({
           whileInView: startOnView ? "show" : undefined,
           animate: startOnView ? undefined : "show",
           exit: "exit",
+          viewport: viewport || (startOnView ? { once } : undefined),
         })}
         className={cn("whitespace-pre-wrap relative inline-flex", className)}
         {...props}
       >
-        <div style={{ overflow: "visible" }}>
-          {renderedSegments}
-        </div>
+        {isString ? (
+          <div style={{ overflow: "visible" }}>{renderedSegments}</div>
+        ) : (
+          renderedSegments
+        )}
         {/* Aurora Overlay */}
         <span className="pointer-events-none absolute inset-0 overflow-hidden mix-blend-lighten dark:mix-blend-darken">
           <span className="pointer-events-none absolute -top-1/2 h-[30vw] w-[30vw] animate-[aurora-border_6s_ease-in-out_infinite,aurora-1_12s_ease-in-out_infinite_alternate] bg-[hsl(var(--color-1))] mix-blend-overlay blur-[1rem]" />
