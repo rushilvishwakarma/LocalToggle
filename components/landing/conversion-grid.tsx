@@ -3,7 +3,7 @@
 import { AgeCalculator } from '@/components/landing/AgeCalculator';
 import { TempCalculator } from '@/components/landing/TempConverter';
 import { AreaCalculator } from '@/components/landing/AreaConverter';
-import { DataCalculator } from '@/components/landing/DataCalculator';
+import { DataCalculator } from '@/components/landing/DataStorageConverter';
 import { DateCalculator } from '@/components/landing/DateCalculator';
 import { BMICalculator } from '@/components/landing/BMICalculator';
 import { DiscountCalculator } from '@/components/landing/DiscountCalculator';

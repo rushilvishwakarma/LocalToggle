@@ -117,7 +117,7 @@ export function SpeedConverter() {
                       <div className="flex gap-2 items-center w-full">
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal"
+                          className="w-full justify-start text-left font-normal py-6"
                         >
                           <div className="flex flex-col w-full overflow-hidden">
                             <span className="truncate">
@@ -168,7 +168,7 @@ export function SpeedConverter() {
                       <div className="flex gap-2 items-center w-full">
                         <Button
                           variant="outline"
-                          className="w-full justify-start text-left font-normal"
+                          className="w-full justify-start text-left font-normal py-6"
                         >
                           <div className="flex flex-col w-full overflow-hidden">
                             <span className="truncate">

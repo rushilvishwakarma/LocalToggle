@@ -629,7 +629,10 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
           </ScrollArea>
           {isGeminiMode && (
             <div className="absolute bottom-2 right-2">
-              <Badge variant="secondary">Caution: AI can make mistakes</Badge>
+                  <Badge variant="outline" className="gap-1.5">
+                   <span className="size-1.5 rounded-full bg-amber-500" aria-hidden="true"></span>
+                    Caution: AI can make Mistakes
+                  </Badge>
             </div>
           )}
         </div>

@@ -27,7 +27,7 @@ export default function SwapButton({ isVertical = false, onClick, className }: S
       aria-label={open ? "Close menu" : "Open menu"}
     >
       <Icon
-        className="transition-transform duration-500 [transition-timing-function:cubic-bezier(0.68,-0.6,0.32,1.6)] group-aria-expanded:rotate-180"
+        className="transition-transform duration-300 ease-in-out group-aria-expanded:rotate-180"
         size={16}
         strokeWidth={2}
         aria-hidden="true"

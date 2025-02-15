@@ -16,6 +16,8 @@ import {
 import { PlusIcon, ArrowUpDown } from 'lucide-react';
 import { AuroraText } from "@/components/ui/aurora-text";
 import SwapButton from "@/components/ui/swap-button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 const units = [
   { name: "Celsius", symbol: "°C" },
   { name: "Fahrenheit", symbol: "°F" },
@@ -153,7 +155,7 @@ export function TempCalculator() {
             <div className="mt-6 flex flex-col gap-3 items-center">
 
               {/* From and To Unit Pickers with Swap Button */}
-              <div className="flex items-center justify-between w-full gap-2">
+              <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
                 <div className="flex flex-col w-full">
                   <label className="pb-2 mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                     From
@@ -170,21 +172,44 @@ export function TempCalculator() {
                                               </span>
                                             </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
-                        {units.map((unit) => (
-                          <Button
-                            key={unit.name}
-                            variant="ghost"
-                            onClick={() => setFromUnit(unit.name)}
-                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                          >
-                            <span className="text-left">{unit.name}</span>
-                            <span className="ml-2 text-gray-400 shrink-0">
-                              {unit.symbol}
-                            </span>
-                          </Button>
-                        ))}
+                    <PopoverContent className="w-[280px] sm:w-[300px] p-0" align="start">
+                      {/* Mobile view with ScrollArea */}
+                      <div className="block sm:hidden">
+                        <ScrollArea className="h-[350px] p-4">
+                          <div className="grid grid-cols-1 gap-2">
+                            {units.map((unit) => (
+                              <Button
+                                key={unit.name}
+                                variant="ghost"
+                                onClick={() => setFromUnit(unit.name)}
+                                className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                              >
+                                <span className="text-left">{unit.name}</span>
+                                <span className="ml-2 text-gray-400 shrink-0">
+                                  {unit.symbol}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                      {/* Desktop view without ScrollArea */}
+                      <div className="hidden sm:block p-4">
+                        <div className="grid grid-cols-2 gap-2">
+                          {units.map((unit) => (
+                            <Button
+                              key={unit.name}
+                              variant="ghost"
+                              onClick={() => setFromUnit(unit.name)}
+                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                            >
+                              <span className="text-left">{unit.name}</span>
+                              <span className="ml-2 text-gray-400 shrink-0">
+                                {unit.symbol}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -214,21 +239,44 @@ export function TempCalculator() {
                         </span>
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-[140px] p-2 max-h-[400px] overflow-y-auto" align="start">
-                      <div className="grid grid-cols-1 gap-2">
-                        {units.map((unit) => (
-                          <Button
-                            key={unit.name}
-                            variant="ghost"
-                            onClick={() => setToUnit(unit.name)}
-                            className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
-                          >
-                            <span className="text-left">{unit.name}</span>
-                            <span className="ml-2 text-gray-400 shrink-0">
-                              {unit.symbol}
-                            </span>
-                          </Button>
-                        ))}
+                    <PopoverContent className="w-[280px] sm:w-[300px] p-0" align="start">
+                      {/* Mobile view with ScrollArea */}
+                      <div className="block sm:hidden">
+                        <ScrollArea className="h-[350px] p-4">
+                          <div className="grid grid-cols-1 gap-2">
+                            {units.map((unit) => (
+                              <Button
+                                key={unit.name}
+                                variant="ghost"
+                                onClick={() => setToUnit(unit.name)}
+                                className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                              >
+                                <span className="text-left">{unit.name}</span>
+                                <span className="ml-2 text-gray-400 shrink-0">
+                                  {unit.symbol}
+                                </span>
+                              </Button>
+                            ))}
+                          </div>
+                        </ScrollArea>
+                      </div>
+                      {/* Desktop view without ScrollArea */}
+                      <div className="hidden sm:block p-4">
+                        <div className="grid grid-cols-2 gap-2">
+                          {units.map((unit) => (
+                            <Button
+                              key={unit.name}
+                              variant="ghost"
+                              onClick={() => setToUnit(unit.name)}
+                              className="justify-between text-xs h-auto py-2 px-3 whitespace-normal"
+                            >
+                              <span className="text-left">{unit.name}</span>
+                              <span className="ml-2 text-gray-400 shrink-0">
+                                {unit.symbol}
+                              </span>
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>
@@ -236,7 +284,7 @@ export function TempCalculator() {
               </div>
 
               {/* Input Value */}
-              <div className="flex items-center justify-between w-full">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-2">
                 <label className="mr-2 block text-sm font-medium text-gray-400 dark:text-gray-400">
                   Value
                 </label>
@@ -246,7 +294,7 @@ export function TempCalculator() {
                   placeholder="Enter temperature"  // Added meaningful placeholder
                   value={inputValue}
                   onChange={handleInputChange}
-                  className="w-[400px] p-2 border border-gray-300 rounded-md"
+                  className="w-full sm:w-[400px] p-2 border border-gray-300 rounded-md"
                 />
               </div>
 
