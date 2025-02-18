@@ -555,14 +555,14 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
     isProcessableQuery(inputValue);
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-4 block">  {/* Changed: Added 'block' to ensure visibility */}
       <div className="flex items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          <div className="relative flex-1">
+          <div className="relative flex-1 min-w-[200px]">  {/* Added min-width to prevent collapse */}
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               id={id} 
-              className="peer pe-9 ps-9" 
+              className="peer pe-9 ps-9 w-full" // Added w-full to maintain width
               placeholder="Search or ask AI for a calculation..."
               value={inputValue}
               autoComplete="off"
@@ -591,7 +591,7 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
               label="Ask AI"
               onClick={() => processInputQuery(inputValue)}
               type="button"
-              className="min-w-[100px"
+              className="min-w-[100px] whitespace-nowrap" // Added whitespace-nowrap
             />
           )}
         </div>
@@ -609,16 +609,20 @@ export default function TagSearch({ onSearch, onQueryChange, placeholder, allTag
       ) : result && (
         <div className="w-full rounded-lg border text-card-foreground bg-muted/50 shadow-sm hover:shadow-md transition-all relative">
           <ScrollArea className="w-full whitespace-nowrap px-4">
-            <div className="py-14 mb-3 flex justify-center items-center min-h-[60px] mx-auto">
+            <div className="py-6 md:py-14 mb-3 flex justify-center items-center mx-auto">
               {(result.trim().startsWith("$") && result.trim().endsWith("$")) || isComplexFormula(result) ? (
                 <LatexAurora 
-                  formula={result}
-                  className="font-bold tracking-wide text-xl"
-                />
+                formula={result}
+                className={cn(
+                  "font-bold tracking-wide",
+                  "text-xs sm:text-xxs md:text-2xl lg:text-3xl", // Responsive font sizes
+                  "w-full text-center px-2" // Ensure full width and center alignment
+                )}
+              />
               ) : (
-                <AuroraText className="font-bold tracking-wide text-4xl sm:text-5xl py-2">
-                  {result}
-                </AuroraText>
+              <AuroraText className="font-bold tracking-wide text-4xl sm:text-5xl py-2">
+                {result}
+              </AuroraText>
               )}
             </div>
             <ScrollBar orientation="horizontal" className="mt-2" />

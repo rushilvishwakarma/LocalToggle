@@ -1,22 +1,22 @@
 'use client'
 
-import { AgeCalculator } from '@/components/landing/AgeCalculator';
-import { TempCalculator } from '@/components/landing/TempConverter';
-import { AreaCalculator } from '@/components/landing/AreaConverter';
-import { DataCalculator } from '@/components/landing/DataStorageConverter';
-import { DateCalculator } from '@/components/landing/DateCalculator';
-import { BMICalculator } from '@/components/landing/BMICalculator';
-import { DiscountCalculator } from '@/components/landing/DiscountCalculator';
-import { LengthCalculator } from '@/components/landing/LengthConverter';
-import { MassCalculator } from '@/components/landing/MassConverter';
-import { NumeralSystemConverter } from '@/components/landing/NumeralSystem';
-import { SpeedConverter } from '@/components/landing/SpeedConverter';
-import { VolumeCalculator } from '@/components/landing/VolumeConverter';
-import { TimeConverter } from '@/components/landing/TimeConverter';
+import { AgeCalculator } from '@/components/calculations/AgeCalculator';
+import { TempCalculator } from '@/components/calculations/TempConverter';
+import { AreaCalculator } from '@/components/calculations/AreaConverter';
+import { DataCalculator } from '@/components/calculations/DataStorageConverter';
+import { DateCalculator } from '@/components/calculations/DateCalculator';
+import { BMICalculator } from '@/components/calculations/BMICalculator';
+import { DiscountCalculator } from '@/components/calculations/DiscountCalculator';
+import { LengthCalculator } from '@/components/calculations/LengthConverter';
+import { MassCalculator } from '@/components/calculations/MassConverter';
+import { NumeralSystemConverter } from '@/components/calculations/NumeralSystem';
+import { SpeedConverter } from '@/components/calculations/SpeedConverter';
+import { VolumeCalculator } from '@/components/calculations/VolumeConverter';
+import { TimeConverter } from '@/components/calculations/TimeConverter';
 import TagSearch from '@/components/smart-search';
 import { useState } from 'react';
 import { Option } from '@/components/ui/multiselect';
-import { YearOfBirthCalculator } from "@/components/landing/YearOfBirthCalculator";
+import { YearOfBirthCalculator } from "@/components/calculations/YearOfBirthCalculator";
 
 // Define component tags with categories
 const tagCategories = {
