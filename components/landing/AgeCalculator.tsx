@@ -151,6 +151,7 @@ const BirthDatePicker = React.memo(({
     </Popover>
   </div>
 ));
+BirthDatePicker.displayName = 'BirthDatePicker';
 
 // Today Display – only this component updates every second.
 const TodayDisplay = React.memo(({
@@ -166,6 +167,8 @@ const TodayDisplay = React.memo(({
   handleManualTimeChange: (time: string) => void;
   handleCurrentDateSelect: (date: Date | undefined) => void;
 }) => {
+  const [open, setOpen] = useState(false);
+
   if (isRealtime) {
     return (
       <Button variant="outline" className="w-[300px] justify-start text-left font-normal group relative">
@@ -184,7 +187,6 @@ const TodayDisplay = React.memo(({
       </Button>
     );
   } else {
-    const [open, setOpen] = useState(false);
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -252,6 +254,7 @@ const TodayDisplay = React.memo(({
     );
   }
 });
+TodayDisplay.displayName = 'TodayDisplay';
 
 // Age Summary – only re-renders when age values change
 const AgeSummary = React.memo(({
@@ -309,6 +312,7 @@ const AgeSummary = React.memo(({
     </AccordionItem>
   </Accordion>
 ));
+AgeSummary.displayName = 'AgeSummary';
 
 // ----------------------
 // New Memoized Component: NextBirthdayDisplay
@@ -336,6 +340,7 @@ const NextBirthdayDisplay = React.memo(({
     </p>
   </div>
 ));
+NextBirthdayDisplay.displayName = 'NextBirthdayDisplay';
 
 // ----------------------
 // New Dynamic Component
@@ -481,6 +486,7 @@ const DynamicAgeInfo = React.memo(({
     </>
   );
 });
+DynamicAgeInfo.displayName = 'DynamicAgeInfo';
 
 // ----------------------
 // Main Component
