@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from "react";
-import { Calculator } from "lucide-react";  // Changed icon
+import { PiggyBank } from "lucide-react";  // Changed icon
 import { MoneyWavy, HandCoins, Coins, CoinVertical } from "@phosphor-icons/react"; 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,14 +39,14 @@ export function DiscountCalculator() {
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^\d*\.?\d*$/.test(value) && value.length <= 15) {
+    if (value === "" || (/^\d*\.?\d*$/.test(value) && value.length <= 15)) {
       setOriginalPrice(value);
     }
   };
 
   const handleDiscountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^\d*\.?\d*$/.test(value) && parseFloat(value) <= 100) {
+    if (value === "" || (/^\d*\.?\d*$/.test(value) && parseFloat(value) <= 100)) {
       setDiscountPercent(value);
     }
   };
@@ -74,7 +74,7 @@ export function DiscountCalculator() {
         <div className="py-3 px-3">
           <div className="flex flex-col gap-1 text-left">
             <div className="flex items-center justify-center bg-white bg-opacity-[0.05] w-16 h-16 rounded-full">
-              <Calculator className="text-gray-400 w-7 h-7 strokeWidth={1}" />
+              <PiggyBank className="text-gray-400 w-7 h-7 strokeWidth={1}" />
             </div>
           </div>
         </div>

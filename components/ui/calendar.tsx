@@ -107,7 +107,7 @@ function Calendar({
 
   const _monthsClassName = cn("relative flex", props.monthsClassName)
   const _monthCaptionClassName = cn(
-    "relative mx-10 flex h-7 items-center justify-center",
+    "relative flex h-7 items-center justify-center",
     props.monthCaptionClassName
   )
   const _weekdaysClassName = cn("flex flex-row", props.weekdaysClassName)
@@ -129,16 +129,6 @@ function Calendar({
     className:
       "absolute h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
   })
-  const _buttonNextClassName = cn(
-    buttonNavClassName,
-    "right-0",
-    props.buttonNextClassName
-  )
-  const _buttonPreviousClassName = cn(
-    buttonNavClassName,
-    "left-0",
-    props.buttonPreviousClassName
-  )
   const _navClassName = cn("flex items-start", props.navClassName)
   const _monthGridClassName = cn("mx-auto mt-4", props.monthGridClassName)
   const _weekClassName = cn("mt-2 flex w-max items-start", props.weekClassName)
@@ -201,8 +191,6 @@ function Calendar({
           month: _monthClassName,
           caption: _captionClassName,
           caption_label: _captionLabelClassName,
-          button_next: _buttonNextClassName,
-          button_previous: _buttonPreviousClassName,
           nav: _navClassName,
           month_grid: _monthGridClassName,
           week: _weekClassName,

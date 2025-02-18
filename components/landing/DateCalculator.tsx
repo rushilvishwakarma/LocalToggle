@@ -3,25 +3,41 @@
 import React, { useState } from "react";
 import { format, differenceInYears, differenceInMonths, differenceInDays } from "date-fns";
 import { CalendarDate, parseDate } from "@internationalized/date";
-import { CakeIcon, CalendarIcon, PlusIcon } from "lucide-react";
-import { DateRangePicker, Group, Dialog, Button, Popover, Label } from "react-aria-components";
-import { RangeCalendar } from "@/components/ui/calendar-rac";
+import { CakeIcon, PlusIcon } from "lucide-react";
+import { DateRangePicker, Group, I18nProvider } from "react-aria-components";
 import { DateInput, dateInputStyle } from "@/components/ui/datefield-rac";
 import { MorphingDialog, MorphingDialogTrigger, MorphingDialogContent, MorphingDialogTitle, MorphingDialogClose, MorphingDialogContainer } from '@/components/ui/morphing-dialog';
 import { AuroraText } from "@/components/ui/aurora-text";
 import { cn } from "@/lib/utils";
 
+type DateRange = {
+  start: CalendarDate;
+  end: CalendarDate;
+} | null;
+
 export function DateCalculator() {
-  const [fromDate, setFromDate] = useState<CalendarDate>(parseDate(format(new Date(), 'yyyy-MM-dd')));
-  const [toDate, setToDate] = useState<CalendarDate>(parseDate(format(new Date(), 'yyyy-MM-dd')));
+  const [fromDate, setFromDate] = useState<CalendarDate | null>(null);
+  const [toDate, setToDate] = useState<CalendarDate | null>(null);
 
-  // Calculate differences using the native Date objects
-  const fromNativeDate = fromDate ? new Date(fromDate.year, fromDate.month - 1, fromDate.day) : new Date();
-  const toNativeDate = toDate ? new Date(toDate.year, toDate.month - 1, toDate.day) : new Date();
+  // Calculate differences using the native Date objects, handling null values
+  const calculateDifference = () => {
+    if (!fromDate || !toDate) return { years: 0, months: 0, days: 0 };
+    
+    try {
+      const fromNativeDate = new Date(fromDate.year, fromDate.month - 1, fromDate.day);
+      const toNativeDate = new Date(toDate.year, toDate.month - 1, toDate.day);
+      
+      return {
+        years: differenceInYears(toNativeDate, fromNativeDate),
+        months: differenceInMonths(toNativeDate, fromNativeDate) % 12,
+        days: differenceInDays(toNativeDate, fromNativeDate) % 30
+      };
+    } catch {
+      return { years: 0, months: 0, days: 0 };
+    }
+  };
 
-  const yearsDiff = differenceInYears(toNativeDate, fromNativeDate);
-  const monthsDiff = differenceInMonths(toNativeDate, fromNativeDate) % 12;
-  const daysDiff = differenceInDays(toNativeDate, fromNativeDate) % 30;
+  const { years, months, days } = calculateDifference();
 
   return (
     <MorphingDialog
@@ -76,8 +92,23 @@ export function DateCalculator() {
             </label>
             
             {/* Date Range Picker */}
-            <DateRangePicker className="space-y-2 mb-6 mt-2">
-              <div className="flex">
+            <I18nProvider locale="hi-IN-u-ca">
+              <DateRangePicker 
+                className="space-y-2 mb-6 mt-2"
+                value={fromDate && toDate ? { start: fromDate, end: toDate } : null}
+                onChange={(range: DateRange) => {
+                  if (range) {
+                    setFromDate(range.start);
+                    setToDate(range.end);
+                  } else {
+                    setFromDate(null);
+                    setToDate(null);
+                  }
+                }}
+                placeholderValue={undefined}
+                isRequired={false}
+                granularity="day"
+              >
                 <Group className={cn(dateInputStyle, "pe-9")}>
                   <DateInput slot="start" unstyled />
                   <span aria-hidden="true" className="px-2 text-muted-foreground/70">
@@ -85,33 +116,21 @@ export function DateCalculator() {
                   </span>
                   <DateInput slot="end" unstyled />
                 </Group>
-                <Button className="z-10 -me-px -ms-9 flex w-9 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-foreground focus-visible:outline-none data-[focus-visible]:outline data-[focus-visible]:outline-2 data-[focus-visible]:outline-ring/70">
-                  <CalendarIcon size={16} strokeWidth={2} />
-                </Button>
-              </div>
-              <Popover
-                className="z-50 rounded-lg border border-border bg-background text-popover-foreground shadow-lg shadow-black/5 outline-none data-[entering]:animate-in data-[exiting]:animate-out data-[entering]:fade-in-0 data-[exiting]:fade-out-0 data-[entering]:zoom-in-95 data-[exiting]:zoom-out-95 data-[placement=bottom]:slide-in-from-top-2 data-[placement=left]:slide-in-from-right-2 data-[placement=right]:slide-in-from-left-2 data-[placement=top]:slide-in-from-bottom-2"
-                offset={4}
-              >
-                <Dialog className="max-h-[inherit] overflow-auto p-2">
-                  <RangeCalendar />
-                </Dialog>
-              </Popover>
-            </DateRangePicker>
-
+              </DateRangePicker>
+            </I18nProvider>
             {/* Results section */}
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
-                <p className="text-sm font-medium text-gray-400 mb-1">Years</p>
-                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${yearsDiff}`}</AuroraText>
+                <p className="text-sm font-medium text-gray-400 mb-1">Days</p>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{days}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
                 <p className="text-sm font-medium text-gray-400 mb-1">Months</p>
-                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${monthsDiff}`}</AuroraText>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{months}</AuroraText>
               </div>
               <div className="bg-neutral-950 dark:bg-neutral-900 rounded-2xl p-4 text-center">
-                <p className="text-sm font-medium text-gray-400 mb-1">Days</p>
-                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{`${daysDiff}`}</AuroraText>
+                <p className="text-sm font-medium text-gray-400 mb-1">Years</p>
+                <AuroraText className="text-3xl font-bold" disableAnimation={true}>{years}</AuroraText>
               </div>
             </div>
           </div>
